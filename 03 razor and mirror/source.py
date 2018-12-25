@@ -6,16 +6,45 @@ font = 'myfont.ttf' #ba안경고딕
 
 color_red = (255,0,0)
 color_white = (255,255,255)
-color_graywhite = (200,200,200)
+color_graywhite = (127,127,127)
 color_black = (0,0,0)
 
 
-board_position_point = ((450, 50),(820, 50),(1005, 370.43),(820, 690.86),(450, 690.86),(265, 370.43))
-board_position_edge = []
+board_position_vertex_point = ((450, 50),(820, 50),(1005, 370.43),(820, 690.86),(450, 690.86),(265, 370.43), (450, 50))
+board_position_edge_point = []
+board_position_all_point = []
+for i in range(6):
+    board_position_edge_point_element = []
+    new_edge_point_X = (board_position_vertex_point[i+1][0] - board_position_vertex_point[i][0]) / 8
+    new_edge_point_Y = (board_position_vertex_point[i+1][1] - board_position_vertex_point[i][1]) / 8
+    for j in range(8):
+        new_edge_point = (board_position_vertex_point[i][0] + new_edge_point_X * j, board_position_vertex_point[i][1] + new_edge_point_Y * j)
+        board_position_edge_point_element.append(new_edge_point)
+    board_position_edge_point.append(board_position_edge_point_element)
 
-append_x = (board_position_point[1][0] - board_position_point[0][0]) / 8
-board_position_edge.append(
-    
+board_position_all_point.append(board_position_edge_point[0])
+board_position_all_point[0].append(board_position_edge_point[1][0])
+for i in range(8):
+    board_position_all_point_element = []
+    new_edge_point_X = (board_position_edge_point[1][i][0] - board_position_edge_point[5][7-i][0] + board_position_edge_point[0][0][1]/2)/ (i + 9)
+    new_edge_point_Y = board_position_edge_point[1][i][1] + board_position_edge_point[1][2][1] - board_position_edge_point[1][1][1]
+    for j in range(i + 10):
+        new_edge_point = (board_position_edge_point[5][7-i][0] + new_edge_point_X * j, new_edge_point_Y)
+        board_position_all_point_element.append(new_edge_point)
+    board_position_all_point.append(board_position_all_point_element)
+for i in range(7):
+    board_position_all_point_element = []
+    new_edge_point_X = (board_position_edge_point[2][i][0] - board_position_edge_point[4][7-i][0] + board_position_edge_point[0][0][1]/2 )/ (16-i)
+    new_edge_point_Y = board_position_edge_point[2][i][1] + board_position_edge_point[1][2][1] - board_position_edge_point[1][1][1]
+    for j in range(16 - i):
+        new_edge_point = (board_position_edge_point[4][7-i][0] + new_edge_point_X * j, new_edge_point_Y)
+        board_position_all_point_element.append(new_edge_point)
+    board_position_all_point.append(board_position_all_point_element)
+        
+board_position_all_point.append(board_position_edge_point[3][:-1])
+board_position_all_point[-1].append(board_position_edge_point[3][7])
+board_position_all_point[-1].append(board_position_edge_point[4][0])
+
 
 
 
@@ -42,7 +71,8 @@ while True:
             left_mouse_clicked = True
         if event.type == pygame.MOUSEMOTION:
             mouse_pos = event.pos
-                
+
+    screen.fill(color_black)       
 
     if current == 'menu':
         if left_mouse_clicked and 610 < mouse_pos[0] < 670 and 400 < mouse_pos[1] < 440:
@@ -73,7 +103,6 @@ while True:
         text_exit_Rect = text_exit.get_rect()
         text_exit_Rect.center = (640, 480)
 
-        screen.fill(color_black)
         screen.blit(text_title, text_title_Rect)
         screen.blit(text_play, text_play_Rect)
         screen.blit(text_exit, text_exit_Rect)
@@ -81,13 +110,29 @@ while True:
 
 
     elif current == 'game':
-        screen.fill(color_black)
-        pygame.draw.polygon(screen, color_white, board_position_point, 2)
-        
-            
-            
+        pygame.draw.aalines(screen, color_white, False, board_position_vertex_point)
+
+        for i in range(3):
+            pygame.draw.aaline(screen, color_graywhite, board_position_edge_point[i][0], board_position_edge_point[i+3][0])
+        for i in range(7):
+            pygame.draw.aaline(screen, color_graywhite, board_position_edge_point[0][i+1], board_position_edge_point[2][7-i])
+            pygame.draw.aaline(screen, color_graywhite, board_position_edge_point[5][i+1], board_position_edge_point[3][7-i])
+            pygame.draw.aaline(screen, color_graywhite, board_position_edge_point[1][i+1], board_position_edge_point[5][7-i])
+            pygame.draw.aaline(screen, color_graywhite, board_position_edge_point[2][i+1], board_position_edge_point[4][7-i])
+            pygame.draw.aaline(screen, color_graywhite, board_position_edge_point[0][i+1], board_position_edge_point[4][7-i])
+            pygame.draw.aaline(screen, color_graywhite, board_position_edge_point[1][i+1], board_position_edge_point[3][7-i])
+
+        for i in board_position_all_point:
+            for j in i:
+                if  j[0]-5<mouse_pos[0]<j[0]+5 and j[1]-5<mouse_pos[1]<j[1]+5:
+                    pygame.draw.circle(screen, color_graywhite, (round(j[0]), round(j[1])), 10, 0)
+                pygame.draw.circle(screen, color_white, (round(j[0]), round(j[1])), 5, 0)
+
         
 
         
+
+
+
     pygame.display.flip()
     clock.tick(FPS)
