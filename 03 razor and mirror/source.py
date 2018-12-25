@@ -45,7 +45,7 @@ board_position_all_point.append(board_position_edge_point[3][:-1])
 board_position_all_point[-1].append(board_position_edge_point[3][7])
 board_position_all_point[-1].append(board_position_edge_point[4][0])
 
-
+board_position_value = [[0 for i in range(20)] for i in range(20)]
 
 
 left_mouse = 1
@@ -59,6 +59,7 @@ pygame.init()
 pygame.display.set_caption("Mirror and Razor")
 screen = pygame.display.set_mode(resolution)
 
+current_game = 'mirror'
 
 current = 'menu'
 while True:
@@ -124,10 +125,24 @@ while True:
 
         for i in board_position_all_point:
             for j in i:
-                if  j[0]-5<mouse_pos[0]<j[0]+5 and j[1]-5<mouse_pos[1]<j[1]+5:
+                if j[0]-5<mouse_pos[0]<j[0]+5 and j[1]-5<mouse_pos[1]<j[1]+5:
                     pygame.draw.circle(screen, color_graywhite, (round(j[0]), round(j[1])), 10, 0)
                 pygame.draw.circle(screen, color_white, (round(j[0]), round(j[1])), 5, 0)
 
+        if current_game == 'mirror':
+            if current_game_mirror == 'position select':
+                for i in range(len(board_position_all_point)):
+                    for j in range(len(board_position_all_point[i])):
+                        if board_position_all_point[i][j][0]-5<mouse_pos[0]<board_position_all_point[i][j][0]+5 and board_position_all_point[i][j][1]-5<mouse_pos[1]<board_position_all_point[i][j][1]+5 and left_mouse_clicked == True:
+                            board_position_value[i][j] = 'mirror'
+                            current_game == 'razor'
+        elif current_game == 'razor':
+            for i in range(len(board_position_all_point)):
+                for j in range(len(board_position_all_point[i])):
+                    if board_position_all_point[i][j][0]-5<mouse_pos[0]<board_position_all_point[i][j][0]+5 and board_position_all_point[i][j][1]-5<mouse_pos[1]<board_position_all_point[i][j][1]+5 and left_mouse_clicked == True:
+                        board_position_value[i][j] = 'razor'
+                        current_game == 'mirror'
+#ㅇㅏ 포기 
         
 
         
