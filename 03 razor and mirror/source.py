@@ -1,23 +1,30 @@
 import sys
 import pygame
+import pygame.gfxdraw
 from pygame.locals import *
 import math
 
 font = 'myfont.ttf'
 
+
 def angle(num):
-    return math.tan(math.pi/180 * num)
+    return math.tan(math.pi / 180 * num)
+
 
 def razor_delta(direction):
-    return [20*math.cos(math.pi/180 * direction*60), 20*math.sin(math.pi/180 * direction*60)]
+    return [20 * math.cos(math.pi / 180 * direction * 60), 20 * math.sin(math.pi / 180 * direction * 60)]
+
 
 def mirror_delta(direction):
-    return [-20*math.cos(math.pi/180 * direction*30), 20*math.sin(math.pi/180 * direction*30)]
+    return [20 * math.cos(math.pi / 180 * direction * 30), 20 * math.sin(math.pi / 180 * direction * 30)]
 
 
 colorRed = (255, 0, 0)
+colorBrightRed = (222, 23, 56)
+colorOrange = (220, 118, 51)
 colorDarkGray = (49, 51, 53)
 colorBlue = (0, 0, 255)
+colorBrightBlue = ( 52, 152, 219)
 colorWhite = (255, 255, 255)
 colorGray = (127, 127, 127)
 colorBlack = (0, 0, 0)
@@ -35,9 +42,9 @@ boardPositionAll = []
 for i in range(6):
     boardPositionEdgeElement = []
     startPoint_X = boardPositionVertex[i][0]
-    endPoint_X = boardPositionVertex[i+1][0]
+    endPoint_X = boardPositionVertex[i + 1][0]
     startPoint_Y = boardPositionVertex[i][1]
-    endPoint_Y = boardPositionVertex[i+1][1]
+    endPoint_Y = boardPositionVertex[i + 1][1]
     gap_X = (endPoint_X - startPoint_X) / 8
     gap_Y = (endPoint_Y - startPoint_Y) / 8
     for j in range(8):
@@ -47,13 +54,13 @@ for i in range(6):
 
 boardPositionAll.append(boardPositionEdge[0])
 boardPositionAll[0].append(boardPositionEdge[1][0])
-correction_X = boardPositionEdge[0][0][1] / 2
+correction_X = boardPositionEdge[0][0][1] / 2 - 2
 correction_Y = boardPositionEdge[1][2][1] - boardPositionEdge[1][1][1]
 for i in range(8):
     boardPositionAllElement = []
-    startPoint_X = boardPositionEdge[5][7-i][0]
+    startPoint_X = boardPositionEdge[5][7 - i][0]
     endPoint_X = boardPositionEdge[1][i][0]
-    Point_Y = boardPositionEdge[5][7-i][1]
+    Point_Y = boardPositionEdge[5][7 - i][1]
     gap_X = (endPoint_X - startPoint_X + correction_X) / (i + 9)
     for j in range(i + 10):
         newEdgePoint = (startPoint_X + gap_X * j, Point_Y)
@@ -61,7 +68,7 @@ for i in range(8):
     boardPositionAll.append(boardPositionAllElement)
 for i in range(7):
     boardPositionAllElement = []
-    startPoint_X = boardPositionEdge[4][7-i][0]
+    startPoint_X = boardPositionEdge[4][7 - i][0]
     endPoint_X = boardPositionEdge[2][i][0]
     gap_X = (endPoint_X - startPoint_X + correction_X) / (16 - i)
     Point_Y = boardPositionEdge[2][i][1]
@@ -84,6 +91,8 @@ current = 'menu'
 currentGame = 'razor'
 currentGameSetting = 'position'
 
+mousePos = (0, 0)
+direction = 0
 while True:
     leftMouseClicked = False
     for event in pygame.event.get():
@@ -131,6 +140,7 @@ while True:
 
     elif current == 'game':
         pygame.draw.aalines(screen, colorWhite, False, boardPositionVertex)
+        pygame.gfxdraw.aapolygon(screen, boardPositionVertex, colorWhite)
 
         for i in range(3):
             pygame.draw.aaline(screen, colorGray, boardPositionEdge[i][0],
@@ -143,23 +153,34 @@ while True:
             pygame.draw.aaline(screen, colorGray, boardPositionEdge[0][i + 1], boardPositionEdge[4][7 - i])
             pygame.draw.aaline(screen, colorGray, boardPositionEdge[1][i + 1], boardPositionEdge[3][7 - i])
 
+        if currentGameSetting == 'direction':
+            if currentGame == 'mirror':
+                pygame.draw.aaline(screen, colorWhite,
+                                   list(map(lambda x, y: x - y, mirror[-1][0:2], mirror_delta(direction))),
+                                   list(map(lambda x, y: x + y, mirror[-1][0:2], mirror_delta(direction))))
+            else:
+                pygame.draw.aaline(screen, colorWhite, razor[-1][0:2],
+                                   list(map(lambda x, y: x + y, razor[-1][0:2], razor_delta(direction))))
+
         for i in boardPositionAll:
             for j in i:
-                if currentGameSetting == 'position' and j[0] - 5 < mousePos[0] < j[0] + 5 and j[1] - 5 < mousePos[1] < j[1] + 5:
-                    if j in razor and j in mirror:
-                        pygame.draw.circle(screen, colorGray, (round(j[0]), round(j[1])), 10, 0)
+                if currentGameSetting == 'position':
+                    if j[0] - 5 < mousePos[0] < j[0] + 5 and j[1] - 5 < mousePos[1] < j[1] + 5:
+                        if list(j) not in list(map(lambda x: x[0:2], mirror))\
+                                and list(j) not in list(map(lambda x: x[0:2], razor)):
+                            pygame.gfxdraw.aacircle(screen, round(j[0]), round(j[1]), 10, colorGray)
 
-                pygame.draw.circle(screen, colorWhite, (round(j[0]), round(j[1])), 5, 0)
+                pygame.gfxdraw.aacircle(screen, round(j[0]), round(j[1]), 2, colorWhite)
         for i in razor:
-            pygame.draw.circle(screen, colorRed, (round(i[0]), round(i[1])), 15, 2)
+            pygame.gfxdraw.aacircle(screen, round(i[0]), round(i[1]), 12, colorOrange)
             if len(i) >= 3:
-                pygame.draw.aaline(screen, colorRed, i[0:2], list(map(lambda x,y:x+y, i[0:2], razor_delta(i[2]))))
+                pygame.draw.aaline(screen, colorRed, i[0:2], list(map(lambda x, y: x + y, i[0:2], razor_delta(i[2]))))
             if len(i) == 4:
-                pygame.draw.aaline(screen, colorRed, i[0:2], list(map(lambda x,y:x+y, i[0:2], razor_delta(i[3]))))
+                pygame.draw.aaline(screen, colorRed, i[0:2], list(map(lambda x, y: x + y, i[0:2], razor_delta(i[3]))))
         for i in mirror:
             if len(i) == 3:
-                pygame.draw.aaline(screen, colorBlue, list(map(lambda x,y:x-y, i[0:2], mirror_delta(i[2]))), list(map(lambda x,y:x+y, i[0:2], mirror_delta(i[2]))))
-
+                pygame.draw.aaline(screen, colorBrightBlue, list(map(lambda x, y: x - y, i[0:2], mirror_delta(i[2]))),
+                                   list(map(lambda x, y: x + y, i[0:2], mirror_delta(i[2]))))
 
         fontOrder = pygame.font.Font(font, 30)
         if currentGame == 'razor':
@@ -176,41 +197,43 @@ while True:
         else:
             textOrderExplanation = fontOrderExplanation.render('Choose a direction', True, colorWhite)
         textOrderExplanationRect = textOrderExplanation.get_rect()
-        textOrderExplanationRect.center = (1070, 140)
+        textOrderExplanationRect.center = (1110, 140)
         screen.blit(textOrderExplanation, textOrderExplanationRect)
 
-        if leftMouseClicked:
-            if currentGame == 'razor':
-                if currentGameSetting == 'position':
-                    for i in boardPositionAll:
-                        for j in i:
-                            if j[0] - 5 < mousePos[0] < j[0] + 5 and j[1] - 5 < mousePos[1] < j[1] + 5:
-                                if not (j in razor and j in mirror):
-                                    razor.append(list(j))
-                                    currentGameSetting = 'direction'
+        if currentGame == 'razor':
+            if currentGameSetting == 'position':
+                for i in boardPositionAll:
+                    for j in i:
+                        if j[0] - 5 < mousePos[0] < j[0] + 5 and j[1] - 5 < mousePos[1] < j[1] + 5:
+                            if list(j) not in list(map(lambda x : x[0:2], razor)) and\
+                                list(j) not in list(map(lambda x : x[0:2], mirror)) and leftMouseClicked:
+                                razor.append(list(j))
+                                currentGameSetting = 'direction'
+            else:
+                delta_X = mousePos[0] - razor[-1][0]
+                delta_Y = mousePos[1] - razor[-1][1]
+                if delta_X != 0:
+                    inclination = delta_Y / delta_X
                 else:
-                    delta_X = mousePos[0] - razor[-1][0]
-                    delta_Y = mousePos[1] - razor[-1][1]
-                    if delta_X != 0:
-                        inclination = delta_Y / delta_X
-                    else:
-                        inclination = 100
+                    inclination = 100
 
-                    if angle(-30) < inclination < angle(30):
-                        if delta_X >= 0:
-                            direction = 0
-                        else:
-                            direction = 3
-                    elif angle(30) < inclination:
-                        if delta_X >= 0:
-                            direction = 1
-                        else:
-                            direction = 0
-                    elif angle(-30) > inclination:
-                        if delta_X >= 0:
-                            direction = 5
-                        else:
-                            direction = 2
+                if angle(-30) < inclination < angle(30):
+                    if delta_X >= 0:
+                        direction = 0
+                    else:
+                        direction = 3
+                elif angle(30) < inclination:
+                    if delta_X >= 0:
+                        direction = 1
+                    else:
+                        direction = 4
+                elif angle(-30) > inclination:
+                    if delta_X >= 0:
+                        direction = 5
+                    else:
+                        direction = 2
+
+                if leftMouseClicked:
 
                     if razor[-1][-1] == direction:
                         continue
@@ -219,37 +242,37 @@ while True:
                         currentGame = 'mirror'
                         currentGameSetting = 'position'
 
-            elif currentGame == 'mirror':
-                if currentGameSetting == 'position':
-                    for i in boardPositionAll:
-                        for j in i:
-                                if j[0] - 5 < mousePos[0] < j[0] + 5 and j[1] - 5 < mousePos[1] < j[1] + 5:
-                                    if not (j in razor and j in mirror):
-                                        mirror.append(list(j))
-                                        print(mirror[-1])
-                                        currentGameSetting = 'direction'
+        elif currentGame == 'mirror':
+            if currentGameSetting == 'position':
+                for i in boardPositionAll:
+                    for j in i:
+                        if j[0] - 5 < mousePos[0] < j[0] + 5 and j[1] - 5 < mousePos[1] < j[1] + 5:
+                            if list(j) not in list(map(lambda x : x[0:2], razor)) and\
+                                list(j) not in list(map(lambda x : x[0:2], mirror)) and leftMouseClicked:
+                                mirror.append(list(j))
+                                currentGameSetting = 'direction'
+            else:
+                delta_X = mousePos[0] - mirror[-1][0]
+                delta_Y = mousePos[1] - mirror[-1][1]
+                if delta_X != 0:
+                    inclination = delta_Y / delta_X
                 else:
-                    delta_X = mousePos[0] - mirror[-1][0]
-                    delta_Y = mousePos[1] - mirror[-1][1]
-                    print(mousePos, mirror[-1])
-                    if delta_X != 0:
-                        inclination = delta_Y / delta_X
-                    else:
-                        inclination = 100
+                    inclination = 100
 
-                    if angle(-15) <= inclination < angle(15):
-                        direction = 0
-                    elif angle(15) <= inclination < angle(45):
-                        direction = 1
-                    elif angle(45) <= inclination < angle(75):
-                        direction = 2
-                    elif angle(75) <= inclination or angle(-75) <= inclination:
-                        direction = 3
-                    elif angle(-75) <= inclination < angle(-45):
-                        direction = 4
-                    else:
-                        direction = 5
-                    print(inclination, direction)
+                if angle(-15) <= inclination < angle(15):
+                    direction = 0
+                elif angle(15) <= inclination < angle(45):
+                    direction = 1
+                elif angle(45) <= inclination < angle(75):
+                    direction = 2
+                elif angle(75) <= inclination or angle(-75) >= inclination:
+                    direction = 3
+                elif angle(-75) <= inclination < angle(-45):
+                    direction = 4
+                else:
+                    direction = 5
+
+                if leftMouseClicked:
                     mirror[-1].append(direction)
                     currentGame = 'razor'
                     currentGameSetting = 'position'
