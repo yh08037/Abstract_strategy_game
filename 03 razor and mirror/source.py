@@ -13,40 +13,403 @@ def razor_delta(direction, tale=0):
     if tale == 0:
         return [20 * math.cos(math.pi / 180 * direction * 60), 20 * math.sin(math.pi / 180 * direction * 60)]
     else:
-        return [-8 * math.cos(math.pi / 180 * (direction * 60 + tale * 30)), -8 * math.sin(math.pi / 180 * (direction * 60 + tale * 30))]
+        return [-6 * math.cos(math.pi / 180 * (direction * 60 + tale * 30)), -6 * math.sin(math.pi / 180 * (direction * 60 + tale * 30))]
 
 
 def mirror_delta(direction):
     return [20 * math.cos(math.pi / 180 * direction * 30), 20 * math.sin(math.pi / 180 * direction * 30)]
 
 
-def refree(razor, mirror, boardPositionAll):
+def razor_direction(board, x, y, direction):
+    if x < 8:
+        if direction == 0:
+            if len(board[x]) == y + 1:
+                return board
+            if board[x][y+1][0] == '-':
+                board = razor_direction(board, x, y+1, direction)
+            elif board[x][y+1][0] == 'M':
+                if board[x][y+1][1] == 3:
+                    return board
+                else:
+                    direction = board[x][y+1][1]
+                    board = razor_direction(board, x, y+1, direction)
+            elif board[x][y+1][0] == 'R':
+                if 3 in board[x][y+1][1:3]:
+                    return board
+                else:
+                    board[x][y+1].append('B')
+                    board = razor_direction(board, x, y + 1, direction)
+
+        elif direction == 1:
+            if len(board[x]) == y + 1 or len(board) == x + 1:
+                return board
+            if board[x+1][y+1][0] == '-':
+                board = razor_direction(board, x+1, y+1, direction)
+            elif board[x+1][y+1][0] == 'M':
+                if board[x+1][y+1][1] == 5:
+                    return board
+                else:
+                    direction = (board[x+1][y+1][1] + 5) % 6
+                    board = razor_direction(board, x+1, y+1, direction)
+            elif board[x+1][y+1][0] == 'R':
+                if 4 in board[x+1][y+1][1:3]:
+                    return board
+                else:
+                    board[x+1][y+1].append('B')
+                    board = razor_direction(board, x+1, y + 1, direction)
+
+        elif direction == 2:
+            if len(board) == x + 1:
+                return board
+            if board[x+1][y][0] == '-':
+                board = razor_direction(board, x+1, y, direction)
+            elif board[x+1][y][0] == 'M':
+                if board[x+1][y][1] == 1:
+                    return board
+                else:
+                    direction = (board[x+1][y][1] + 4) % 6
+                    board = razor_direction(board, x+1, y, direction)
+            elif board[x+1][y][0] == 'R':
+                if 5 in board[x+1][y][1:3]:
+                    return board
+                else:
+                    board[x+1][y].append('B')
+                    board = razor_direction(board, x+1, y, direction)
+
+        elif direction == 3:
+            if y == 0:
+                return board
+            if board[x][y-1][0] == '-':
+                board = razor_direction(board, x, y-1, direction)
+            elif board[x][y-1][0] == 'M':
+                if board[x][y-1][1] == 3:
+                    return board
+                else:
+                    direction = (board[x][y-1][1] + 3) % 6
+                    board = razor_direction(board, x, y - 1, direction)
+            elif board[x][y - 1][0] == 'R':
+                if 0 in board[x][y - 1][1:3]:
+                    return board
+                else:
+                    board[x][y - 1].append('B')
+                    board = razor_direction(board, x, y - 1, direction)
+
+        elif direction == 4:
+            if x == 0 or y == 0:
+                return board
+            if board[x-1][y-1][0] == '-':
+                board = razor_direction(board, x-1, y-1, direction)
+            elif board[x-1][y-1][0] == 'M':
+                if board[x-1][y-1][1] == 5:
+                    return board
+                else:
+                    direction = (board[x-1][y-1][1] + 2) % 6
+                    board = razor_direction(board, x-1, y - 1, direction)
+            elif board[x-1][y-1][0] == 'R':
+                if 1 in board[x-1][y-1][1:3]:
+                    return board
+                else:
+                    board[x-1][y - 1].append('B')
+                    board = razor_direction(board, x-1, y - 1, direction)
+
+        elif direction == 5:
+            if x == 0 or len(board[x-1]) == y:
+                return board
+            if board[x-1][y][0] == '-':
+                board = razor_direction(board, x-1, y, direction)
+            elif board[x-1][y][0] == 'M':
+                if board[x-1][y][1] == 1:
+                    return board
+                else:
+                    direction = (board[x-1][y][1] + 1) % 6
+                    board = razor_direction(board, x-1, y, direction)
+            elif board[x-1][y][0] == 'R':
+                if 2 in board[x-1][y][1:3]:
+                    return board
+                else:
+                    board[x-1][y].append('B')
+                    board = razor_direction(board, x-1, y, direction)
+
+    elif x == 8:
+        if direction == 0:
+            if len(board[x]) == y + 1:
+                return board
+            if board[x][y + 1][0] == '-':
+                board = razor_direction(board, x, y + 1, direction)
+            elif board[x][y + 1][0] == 'M':
+                if board[x][y + 1][1] == 3:
+                    return board
+                else:
+                    direction = board[x][y + 1][1]
+                    board = razor_direction(board, x, y + 1, direction)
+            elif board[x][y + 1][0] == 'R':
+                if 3 in board[x][y + 1][1:3]:
+                    return board
+                else:
+                    board[x][y + 1].append('B')
+                    board = razor_direction(board, x, y + 1, direction)
+
+        elif direction == 1:
+            if len(board) == x + 1 or len(board[x+1]) == y:
+                return board
+            if board[x + 1][y][0] == '-':
+                board = razor_direction(board, x + 1, y, direction)
+            elif board[x + 1][y][0] == 'M':
+                if board[x + 1][y][1] == 5:
+                    return board
+                else:
+                    direction = (board[x + 1][y][1] + 5) % 6
+                    board = razor_direction(board, x + 1, y, direction)
+            elif board[x + 1][y][0] == 'R':
+                if 4 in board[x + 1][y][1:3]:
+                    return board
+                else:
+                    board[x + 1][y].append('B')
+                    board = razor_direction(board, x + 1, y, direction)
+
+        elif direction == 2:
+            if len(board) == x + 1 or y == 0:
+                return board
+            if board[x + 1][y - 1][0] == '-':
+                board = razor_direction(board, x + 1, y - 1, direction)
+            elif board[x + 1][y - 1][0] == 'M':
+                if board[x + 1][y - 1][1] == 1:
+                    return board
+                else:
+                    direction = (board[x + 1][y - 1][1] + 4) % 6
+                    board = razor_direction(board, x + 1, y - 1, direction)
+            elif board[x + 1][y - 1][0] == 'R':
+                if 5 in board[x + 1][y - 1][1:3]:
+                    return board
+                else:
+                    board[x + 1][y - 1].append('B')
+                    board = razor_direction(board, x + 1, y - 1, direction)
+
+        elif direction == 3:
+            if y == 0:
+                return board
+            if board[x][y - 1][0] == '-':
+                board = razor_direction(board, x, y - 1, direction)
+            elif board[x][y - 1][0] == 'M':
+                if board[x][y - 1][1] == 3:
+                    return board
+                else:
+                    direction = (board[x][y - 1][1] + 3) % 6
+                    board = razor_direction(board, x, y - 1, direction)
+            elif board[x][y - 1][0] == 'R':
+                if 0 in board[x][y - 1][1:3]:
+                    return board
+                else:
+                    board[x][y - 1].append('B')
+                    board = razor_direction(board, x, y - 1, direction)
+
+        elif direction == 4:
+            if x == 0 or y == 0:
+                return board
+            if board[x - 1][y-1][0] == '-':
+                board = razor_direction(board, x - 1, y-1, direction)
+            elif board[x - 1][y-1][0] == 'M':
+                if board[x - 1][y-1][1] == 5:
+                    return board
+                else:
+                    direction = (board[x - 1][y-1][1] + 2) % 6
+                    board = razor_direction(board, x - 1, y-1, direction)
+            elif board[x - 1][y-1][0] == 'R':
+                if 1 in board[x-1][y-1][1:3]:
+                    return board
+                else:
+                    board[x - 1][y-1].append('B')
+                    board = razor_direction(board, x - 1, y-1, direction)
+
+        elif direction == 5:
+            if x == 0 or len(board[x-1]) == y:
+                return board
+            if board[x - 1][y][0] == '-':
+                board = razor_direction(board, x - 1, y, direction)
+            elif board[x - 1][y][0] == 'M':
+                if board[x - 1][y][1] == 1:
+                    return board
+                else:
+                    direction = (board[x - 1][y][1] + 1) % 6
+                    board = razor_direction(board, x - 1, y, direction)
+            elif board[x - 1][y][0] == 'R':
+                if 2 in board[x-1][y][1:3]:
+                    return board
+                else:
+                    board[x - 1][y].append('B')
+                    board = razor_direction(board, x - 1, y, direction)
+
+    elif x > 8:
+        if direction == 0:
+            if len(board[x]) == y + 1:
+                return board
+            if board[x][y + 1][0] == '-':
+                board = razor_direction(board, x, y + 1, direction)
+            elif board[x][y + 1][0] == 'M':
+                if board[x][y + 1][1] == 3:
+                    return board
+                else:
+                    direction = board[x][y + 1][1]
+                    board = razor_direction(board, x, y + 1, direction)
+            elif board[x][y + 1][0] == 'R':
+                if 3 in board[x][y + 1][1:3]:
+                    return board
+                else:
+                    board[x][y + 1].append('B')
+                    board = razor_direction(board, x, y + 1, direction)
+
+        elif direction == 1:
+            if len(board) == x + 1 or len(board[x+1]) == y:
+                return board
+            if board[x + 1][y][0] == '-':
+                board = razor_direction(board, x + 1, y, direction)
+            elif board[x + 1][y][0] == 'M':
+                if board[x + 1][y][1] == 5:
+                    return board
+                else:
+                    direction = (board[x + 1][y][1] + 5) % 6
+                    board = razor_direction(board, x + 1, y, direction)
+            elif board[x + 1][y][0] == 'R':
+                if 4 in board[x + 1][y][1:3]:
+                    return board
+                else:
+                    board[x + 1][y].append('B')
+                    board = razor_direction(board, x + 1, y, direction)
+
+        elif direction == 2:
+            if len(board) == x + 1 or y == 0:
+                return board
+            if board[x + 1][y - 1][0] == '-':
+                board = razor_direction(board, x + 1, y -1, direction)
+            elif board[x + 1][y-1][0] == 'M':
+                if board[x + 1][y-1][1] == 1:
+                    return board
+                else:
+                    direction = (board[x + 1][y-1][1] + 4) % 6
+                    board = razor_direction(board, x + 1, y-1, direction)
+            elif board[x + 1][y-1][0] == 'R':
+                if 5 in board[x + 1][y-1][1:3]:
+                    return board
+                else:
+                    board[x + 1][y-1].append('B')
+                    board = razor_direction(board, x+1, y - 1, direction)
+
+        elif direction == 3:
+            if y == 0:
+                return board
+            if board[x][y - 1][0] == '-':
+                board = razor_direction(board, x, y - 1, direction)
+            elif board[x][y - 1][0] == 'M':
+                if board[x][y - 1][1] == 3:
+                    return board
+                else:
+                    direction = (board[x][y - 1][1] + 3) % 6
+                    board = razor_direction(board, x, y - 1, direction)
+            elif board[x][y - 1][0] == 'R':
+                if 0 in board[x][y - 1][1:3]:
+                    return board
+                else:
+                    board[x][y - 1].append('B')
+                    board = razor_direction(board, x, y - 1, direction)
+
+        elif direction == 4:
+            if x == 0:
+                return board
+            if board[x - 1][y][0] == '-':
+                board = razor_direction(board, x - 1, y, direction)
+            elif board[x - 1][y][0] == 'M':
+                if board[x - 1][y][1] == 5:
+                    return board
+                else:
+                    direction = (board[x - 1][y][1] + 2) % 6
+                    board = razor_direction(board, x - 1, y, direction)
+            elif board[x - 1][y][0] == 'R':
+                if 1 in board[x-1][y][1:3]:
+                    return board
+                else:
+                    board[x - 1][y].append('B')
+                    board = razor_direction(board, x-1, y, direction)
+
+        elif direction == 5:
+            if x == 0 or len(board[x]) == y + 1:
+                return board
+            if board[x - 1][y+1][0] == '-':
+                board = razor_direction(board, x - 1, y+1, direction)
+            elif board[x - 1][y+1][0] == 'M':
+                if board[x - 1][y+1][1] == 1:
+                    return board
+                else:
+                    direction = (board[x - 1][y+1][1] + 1) % 6
+                    board = razor_direction(board, x - 1, y+1, direction)
+            elif board[x - 1][y+1][0] == 'R':
+                if 2 in board[x-1][y+1][1:3]:
+                    return board
+                else:
+                    board[x - 1][y+1].append('B')
+                    board = razor_direction(board, x - 1, y + 1, direction)
+
+    return board
+
+
+def Is_it_burnt(razor, mirror, boardPositionAll):
     board = []
     for i in range(9):
-        boardElement = []
-        for j in range(i + 10):
-            for k in razor:
-
-            for k in mirror:
-                if razor == boardPositionAll:
-                    boardElement.append(['R', 1, 2])
-                elif mirror == boardPositionAll:
-                    boardElement.append(['M', 4])
-                else:
-                    boardElement.append('-')
-        board.append(boardElement)
-
-    for i in range(8):
-        boardElement = []
-        for j in range(16 - i):
-            if razor == boardPositionAll:
-                boardElement.append(['R', 1, 2])
-            elif mirror == boardPositionAll:
-                boardElement.append(['M', 4])
+        board_element = []
+        for j in range(i + 9):
+            for k in range(len(razor)):
+                if razor[k][0] == boardPositionAll[i][j][0] and razor[k][1] == boardPositionAll[i][j][1]:
+                    board_element.append(['R', razor[k][2], razor[k][3]])
+                    break
             else:
-                boardElement.append('-')
-        board.append(boardElement)
+                for k in range(len(mirror)):
+                    if mirror[k][0] == boardPositionAll[i][j][0] and mirror[k][1] == boardPositionAll[i][j][1]:
+                        board_element.append(['M', mirror[k][2]])
+                        break
+                else:
+                    board_element.append(['-'])
+        board.append(board_element)
 
+    for i in range(9, 17):
+        board_element = []
+        for j in range(25 - i):
+            for k in range(len(razor)):
+                if razor[k][0] == boardPositionAll[i][j][0] and razor[k][1] == boardPositionAll[i][j][1]:
+                    board_element.append(['R', razor[k][2], razor[k][3]])
+                    break
+            else:
+                for k in range(len(mirror)):
+                    if mirror[k][0] == boardPositionAll[i][j][0] and mirror[k][1] == boardPositionAll[i][j][1]:
+                        board_element.append(['M', mirror[k][2]])
+                        break
+                else:
+                    board_element.append(['-'])
+        board.append(board_element)
+    for x in range(len(board)):
+        for y in range(len(board[x])):
+            if board[x][y][0] == 'R':
+                for k in range(1, 3):
+                    board = razor_direction(board, x, y, board[x][y][k])
+
+    for i in range(9):
+        for j in range(i + 9):
+            for k in range(len(razor)):
+                if razor[k][0] == boardPositionAll[i][j][0] and razor[k][1] == boardPositionAll[i][j][1]:
+                    if len(board[i][j]) >= 4:
+                        if len(razor[k]) == 4:
+                            razor[k].append('B')
+    for i in range(9, 17):
+        for j in range(25 - i):
+            for k in range(len(razor)):
+                if razor[k][0] == boardPositionAll[i][j][0] and razor[k][1] == boardPositionAll[i][j][1]:
+                    if len(board[i][j]) == 4:
+                        if len(razor[k]) == 4:
+                            razor[k].append('B')
+    burnt = 0
+    for i in razor:
+        if len(i) == 5:
+           burnt += 1
+    notBurnt = len(razor) - burnt
+    return razor, burnt, notBurnt
 
 
 font = 'myfont.ttf'
@@ -81,7 +444,7 @@ for i in range(6):
     endPoint_Y = boardPositionVertex[i + 1][1]
     gap_Y = (endPoint_Y - startPoint_Y) / 8
     for j in range(8):
-        newEdgePoint = (startPoint_X + gap_X * j, startPoint_Y + gap_Y * j)
+        newEdgePoint = (round(startPoint_X + gap_X * j, 1), round(startPoint_Y + gap_Y * j, 1))
         boardPositionEdgeElement.append(newEdgePoint)
     boardPositionEdge.append(boardPositionEdgeElement)
 
@@ -94,7 +457,7 @@ for i in range(8):
     gap_X = (endPoint_X - startPoint_X) / (i + 8.5)
     Point_Y = boardPositionEdge[5][7 - i][1]
     for j in range(i + 10):
-        newEdgePoint = (startPoint_X + gap_X * j, Point_Y)
+        newEdgePoint = (round(startPoint_X + gap_X * j, 1), round(Point_Y, 1))
         boardPositionAllElement.append(newEdgePoint)
     boardPositionAll.append(boardPositionAllElement)
 for i in range(7):
@@ -104,7 +467,7 @@ for i in range(7):
     gap_X = (endPoint_X - startPoint_X) / (15.5 - i)
     Point_Y = boardPositionEdge[2][i][1] + boardPositionEdge[2][3][1] - boardPositionEdge[2][2][1]
     for j in range(16 - i):
-        newEdgePoint = (startPoint_X + gap_X * j, Point_Y)
+        newEdgePoint = (round(startPoint_X + gap_X * j, 1), round(Point_Y, 1))
         boardPositionAllElement.append(newEdgePoint)
     boardPositionAll.append(boardPositionAllElement)
 boardPositionAll.append(boardPositionEdge[3][:-1])
@@ -125,6 +488,9 @@ currentGameSetting = 'position'
 
 mousePos = (0, 0)
 direction = 0
+burnt = 0
+notBurnt = 0
+
 while True:
     leftMouseClicked = False
     for event in pygame.event.get():
@@ -190,7 +556,7 @@ while True:
                 pygame.draw.aaline(screen, colorWhite,
                                    list(map(lambda x, y: x - y, mirror[-1][0:2], mirror_delta(direction))),
                                    list(map(lambda x, y: x + y, mirror[-1][0:2], mirror_delta(direction))))
-            else:
+            elif currentGame == 'razor':
                 for i in range(6):
                     if tuple(razor[-1][0:2]) in boardPositionEdge[i]:
                         if direction == (i+4) % 6 or direction == (i+5) % 6:
@@ -211,21 +577,25 @@ while True:
 
                 pygame.gfxdraw.aacircle(screen, round(j[0]), round(j[1]), 2, colorWhite)
         for i in razor:
-            pygame.gfxdraw.aacircle(screen, round(i[0]), round(i[1]), 12, colorOrange)
+            if len(i) == 5:
+                pygame.draw.circle(screen, colorOrange, (round(i[0]), round(i[1])), 11)
+
+            else:
+                pygame.gfxdraw.aacircle(screen, round(i[0]), round(i[1]), 11, colorOrange)
             if len(i) >= 3:
                 arrow = list(map(lambda x, y: x + y, i[0:2], razor_delta(i[2])))
                 arrowTale1 = list(map(lambda x, y: x+y, arrow, razor_delta(i[2], 1)))
                 arrowTale2 = list(map(lambda x, y: x+y, arrow, razor_delta(i[2], -1)))
-                pygame.draw.aaline(screen, colorBrightRed, i[0:2], arrow)
-                pygame.draw.aaline(screen, colorBrightRed, arrow, arrowTale1)
-                pygame.draw.aaline(screen, colorBrightRed, arrow, arrowTale2)
-            if len(i) == 4:
+                pygame.draw.aaline(screen, colorOrange, i[0:2], arrow)
+                pygame.draw.aaline(screen, colorOrange, arrow, arrowTale1)
+                pygame.draw.aaline(screen, colorOrange, arrow, arrowTale2)
+            if len(i) >= 4:
                 arrow = list(map(lambda x, y: x + y, i[0:2], razor_delta(i[3])))
                 arrowTale1 = list(map(lambda x, y: x+y, arrow, razor_delta(i[3], 1)))
                 arrowTale2 = list(map(lambda x, y: x+y, arrow, razor_delta(i[3], -1)))
-                pygame.draw.aaline(screen, colorBrightRed, i[0:2], arrow)
-                pygame.draw.aaline(screen, colorBrightRed, arrow, arrowTale1)
-                pygame.draw.aaline(screen, colorBrightRed, arrow, arrowTale2)
+                pygame.draw.aaline(screen, colorOrange, i[0:2], arrow)
+                pygame.draw.aaline(screen, colorOrange, arrow, arrowTale1)
+                pygame.draw.aaline(screen, colorOrange, arrow, arrowTale2)
         for i in mirror:
             if len(i) == 3:
                 pygame.draw.aaline(screen, colorBrightBlue, list(map(lambda x, y: x - y, i[0:2], mirror_delta(i[2]))),
@@ -234,7 +604,7 @@ while True:
         fontOrder = pygame.font.Font(font, 30)
         if currentGame == 'razor':
             textOrder = fontOrder.render('Razor turns', True, colorWhite)
-        else:
+        elif currentGame == 'mirror':
             textOrder = fontOrder.render('Mirror turns', True, colorWhite)
         textOrderRect = textOrder.get_rect()
         textOrderRect.center = (1100, 100)
@@ -243,11 +613,35 @@ while True:
         fontOrderExplanation = pygame.font.Font(font, 25)
         if currentGameSetting == 'position':
             textOrderExplanation = fontOrderExplanation.render('Choose a position.', True, colorWhite)
-        else:
+        elif currentGameSetting == 'direction':
             textOrderExplanation = fontOrderExplanation.render('Choose a direction', True, colorWhite)
         textOrderExplanationRect = textOrderExplanation.get_rect()
-        textOrderExplanationRect.center = (1110, 140)
+        textOrderExplanationRect.center = (1100, 140)
         screen.blit(textOrderExplanation, textOrderExplanationRect)
+
+        fontIsBurntExplanation = pygame.font.Font(font, 16)
+        textBurntExplanation = fontIsBurntExplanation.render('Burnt : ' + str(burnt), True, colorWhite)
+        textBurntExplanationRect = textBurntExplanation.get_rect()
+        textBurntExplanationRect.center = (1100, 170)
+        screen.blit(textBurntExplanation, textBurntExplanationRect)
+        textNotBurntExplanation = fontIsBurntExplanation.render('Not Burnt : ' + str(notBurnt), True, colorWhite)
+        textNotBurntExplanationRect = textNotBurntExplanation.get_rect()
+        textNotBurntExplanationRect.center = (1100, 190)
+        screen.blit(textNotBurntExplanation, textNotBurntExplanationRect)
+
+        if burnt == 20:
+            fontMirrorWin = pygame.font.Font(font, 50)
+            textMirrorWin = fontMirrorWin.render('Mirror Wins!', True, colorWhite)
+            textMirrorWinRect = textMirrorWin.get_rect()
+            textMirrorWinRect.center = (640, 320)
+            screen.blit(textMirrorWin, textMirrorWinRect)
+        elif notBurnt == 20:
+            fontRazorWin = pygame.font.Font(font, 50)
+            textRazorWin = fontRazorWin.render('Razor Wins!', True, colorWhite)
+            textRazorWinRect = textRazorWin.get_rect()
+            textRazorWinRect.center = (640, 320)
+            screen.blit(textRazorWin, textRazorWinRect)
+
 
         if currentGame == 'razor':
             if currentGameSetting == 'position':
@@ -258,7 +652,7 @@ while True:
                                     list(j) not in list(map(lambda x: x[0:2], mirror)) and leftMouseClicked:
                                 razor.append(list(j))
                                 currentGameSetting = 'direction'
-            else:
+            elif currentGameSetting == 'direction':
                 delta_X = mousePos[0] - razor[-1][0]
                 delta_Y = mousePos[1] - razor[-1][1]
                 if delta_X != 0:
@@ -269,17 +663,17 @@ while True:
                 if angle(-30) < inclination < angle(30):
                     if delta_X >= 0:
                         direction = 0
-                    else:
+                    elif delta_X < 0:
                         direction = 3
                 elif angle(30) < inclination:
                     if delta_X >= 0:
                         direction = 1
-                    else:
+                    elif delta_X < 0:
                         direction = 4
                 elif angle(-30) > inclination:
                     if delta_X >= 0:
                         direction = 5
-                    else:
+                    elif delta_X < 0:
                         direction = 2
 
                 if leftMouseClicked:
@@ -297,6 +691,7 @@ while True:
                         if len(razor[-1]) == 4:
                             currentGame = 'mirror'
                             currentGameSetting = 'position'
+                            razor, burnt, notBurnt = Is_it_burnt(razor, mirror, boardPositionAll)
 
         elif currentGame == 'mirror':
             if currentGameSetting == 'position':
@@ -307,7 +702,7 @@ while True:
                                     list(j) not in list(map(lambda x: x[0:2], mirror)) and leftMouseClicked:
                                 mirror.append(list(j))
                                 currentGameSetting = 'direction'
-            else:
+            elif currentGameSetting == 'direction':
                 delta_X = mousePos[0] - mirror[-1][0]
                 delta_Y = mousePos[1] - mirror[-1][1]
                 if delta_X != 0:
@@ -325,13 +720,16 @@ while True:
                     direction = 3
                 elif angle(-75) <= inclination < angle(-45):
                     direction = 4
-                else:
+                elif angle(-45) <= inclination < angle(-15):
                     direction = 5
 
                 if leftMouseClicked:
                     mirror[-1].append(direction)
                     currentGame = 'razor'
                     currentGameSetting = 'position'
+                    razor, burnt, notBurnt = Is_it_burnt(razor, mirror, boardPositionAll)
+
+
 
     pygame.display.flip()
     clock.tick(FPS)
