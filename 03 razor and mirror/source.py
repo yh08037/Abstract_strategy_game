@@ -491,9 +491,14 @@ direction = 0
 burnt = 0
 notBurnt = 0
 
+
 while True:
     leftMouseClicked = False
+    escClicked = False
     for event in pygame.event.get():
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                escClicked = True
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
@@ -503,6 +508,21 @@ while True:
             mousePos = event.pos
 
     screen.fill(colorDarkGray)
+
+    if escClicked:
+        if current == 'game':
+            if currentGame == 'mirror' and currentGameSetting == 'position':
+                del razor[-1]
+                currentGame = 'razor'
+            elif currentGame == 'mirror' and currentGameSetting == 'direction':
+                del mirror[-1]
+                currentGameSetting = 'position'
+            elif currentGame == 'razor' and currentGameSetting == 'position':
+                del mirror[-1]
+                currentGame = 'mirror'
+            elif currentGame == 'razor' and currentGameSetting == 'direction':
+                del razor[-1]
+                currentGameSetting = 'position'
 
     if current == 'menu':
         if leftMouseClicked and 610 < mousePos[0] < 670 and 400 < mousePos[1] < 440:
@@ -728,8 +748,6 @@ while True:
                     currentGame = 'razor'
                     currentGameSetting = 'position'
                     razor, burnt, notBurnt = Is_it_burnt(razor, mirror, boardPositionAll)
-
-
 
     pygame.display.flip()
     clock.tick(FPS)
