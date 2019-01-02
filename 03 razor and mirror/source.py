@@ -4,7 +4,6 @@ import pygame.gfxdraw
 from pygame.locals import *
 import math
 
-
 def angle(num):
     return math.tan(math.pi / 180 * num)
 
@@ -396,14 +395,14 @@ def Is_it_burnt(razor, mirror, boardPositionAll):
                 if razor[k][0] == boardPositionAll[i][j][0] and razor[k][1] == boardPositionAll[i][j][1]:
                     if len(board[i][j]) >= 4:
                         if len(razor[k]) == 4:
-                            razor[k].append('B')
+                            razor[k].append(1)
     for i in range(9, 17):
         for j in range(25 - i):
             for k in range(len(razor)):
                 if razor[k][0] == boardPositionAll[i][j][0] and razor[k][1] == boardPositionAll[i][j][1]:
                     if len(board[i][j]) == 4:
                         if len(razor[k]) == 4:
-                            razor[k].append('B')
+                            razor[k].append(1)
     burnt = 0
     for i in razor:
         if len(i) == 5:
@@ -529,6 +528,24 @@ while True:
             current = 'game'
             continue
         if leftMouseClicked and 610 < mousePos[0] < 670 and 460 < mousePos[1] < 500:
+            openFile = input("Enter to open file. ") + '.txt'
+            openData = open(openFile, 'r')
+            while True:
+                mirrorData = openData.readline().rstrip('\n')
+
+                if mirrorData == '-':
+                    break
+                mirror.append(list(map(lambda data: float(data.strip("'' ")), list(map(str, mirrorData.strip("[]").split(','))))))
+            while True:
+                razorData = openData.readline().rstrip('\n')
+                if razorData == '':
+                    break
+                razor.append(list(map(lambda data: float(data.strip("'' ")), list(map(str, razorData.strip("[]").split(','))))))
+            openData.close()
+            print('opened')
+            current = 'game'
+            continue
+        if leftMouseClicked and 610 < mousePos[0] < 670 and 520 < mousePos[1] < 560:
             pygame.quit()
             sys.exit()
 
@@ -547,14 +564,24 @@ while True:
         textPlayRect.center = (640, 420)
         screen.blit(textPlay, textPlayRect)
 
-        fontExit = pygame.font.Font(font, 20)
+        fontOpen = pygame.font.Font(font, 20)
         if 610 < mousePos[0] < 670 and 460 < mousePos[1] < 500:
+            textOpen = fontOpen.render('Open', True, colorRed)
+        else:
+            textOpen = fontOpen.render('Open', True, colorWhite)
+        textOpenRect = textOpen.get_rect()
+        textOpenRect.center = (640, 480)
+        screen.blit(textOpen, textOpenRect)
+
+        fontExit = pygame.font.Font(font, 20)
+        if 610 < mousePos[0] < 670 and 520 < mousePos[1] < 560:
             textExit = fontExit.render('Exit', True, colorRed)
         else:
             textExit = fontExit.render('Exit', True, colorWhite)
         textExitRect = textExit.get_rect()
-        textExitRect.center = (640, 480)
+        textExitRect.center = (640, 540)
         screen.blit(textExit, textExitRect)
+        pygame.display.flip()
 
     elif current == 'game':
         pygame.draw.aalines(screen, colorWhite, False, boardPositionVertex)
@@ -586,6 +613,7 @@ while True:
                                 break
                 else:
                     pygame.draw.aaline(screen, colorWhite, razor[-1][0:2], list(map(lambda x, y: x + y, razor[-1][0:2], razor_delta(direction))))
+
 
         for i in boardPositionAll:
             for j in i:
@@ -749,5 +777,26 @@ while True:
                     currentGameSetting = 'position'
                     razor, burnt, notBurnt = Is_it_burnt(razor, mirror, boardPositionAll)
 
-    pygame.display.flip()
+        fontSave = pygame.font.Font(font, 20)
+        if 1080 < mousePos[0] < 1120 and 580 < mousePos[1] < 620:
+            textSave = fontSave.render('Save', True, colorRed)
+        else:
+            textSave = fontSave.render('Save', True, colorWhite)
+        textSaveRect = textSave.get_rect()
+        textSaveRect.center = (1100, 600)
+        screen.blit(textSave, textSaveRect)
+
+        pygame.display.flip()
+
+        if 1080 < mousePos[0] < 1120 and 580 < mousePos[1] < 620 and leftMouseClicked:
+            saveFile = input("Name to save : ") + '.txt'
+            saveData = open(saveFile, 'w')
+            for i in range(len(mirror)):
+                saveData.write(str(mirror[i]) + '\n')
+            saveData.write('-\n')
+            for i in range(len(razor)):
+                saveData.write(str(razor[i]) + '\n')
+            saveData.close()
+            print('Saved')
+
     clock.tick(FPS)
