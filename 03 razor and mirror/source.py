@@ -389,26 +389,48 @@ def Is_it_burnt(razor, mirror, boardPositionAll):
                 for k in range(1, 3):
                     board = razor_direction(board, x, y, board[x][y][k])
 
+    for i in range(len(razor)):
+        razor[i] = razor[i][0:4]
+
+    burntRazorElement = []
     for i in range(9):
         for j in range(i + 9):
             for k in range(len(razor)):
                 if razor[k][0] == boardPositionAll[i][j][0] and razor[k][1] == boardPositionAll[i][j][1]:
                     if len(board[i][j]) >= 4:
-                        if len(razor[k]) == 4:
-                            razor[k].append(1)
+                        burntRazorElement.append([i, j])
     for i in range(9, 17):
         for j in range(25 - i):
             for k in range(len(razor)):
                 if razor[k][0] == boardPositionAll[i][j][0] and razor[k][1] == boardPositionAll[i][j][1]:
                     if len(board[i][j]) == 4:
-                        if len(razor[k]) == 4:
+                        burntRazorElement.append([i, j])
+    burntRazor.append(burntRazorElement)
+
+    for i in range(9):
+        for j in range(i + 9):
+            for k in range(len(razor)):
+                if razor[k][0] == boardPositionAll[i][j][0] and razor[k][1] == boardPositionAll[i][j][1]:
+                    for l in range(len(burntRazor)):
+                        if [i, j] in burntRazor[l]:
                             razor[k].append(1)
+                            break
+    for i in range(9, 17):
+        for j in range(25 - i):
+            for k in range(len(razor)):
+                if razor[k][0] == boardPositionAll[i][j][0] and razor[k][1] == boardPositionAll[i][j][1]:
+                    for l in range(len(burntRazor)):
+                        if [i, j] in burntRazor[l]:
+                            razor[k].append(1)
+                            break
+
     burnt = 0
     for i in razor:
         if len(i) == 5:
            burnt += 1
     notBurnt = len(razor) - burnt
-    return razor, burnt, notBurnt
+    print(razor, burntRazor)
+    return razor, burnt, notBurnt, burntRazor
 
 
 font = 'myfont.ttf'
@@ -480,6 +502,7 @@ screen = pygame.display.set_mode(resolution)
 
 razor = []
 mirror = []
+burntRazor = []
 
 current = 'menu'
 currentGame = 'razor'
@@ -490,6 +513,7 @@ direction = 0
 burnt = 0
 notBurnt = 0
 
+turn = 1
 
 while True:
     leftMouseClicked = False
@@ -510,6 +534,8 @@ while True:
 
     if escClicked:
         if current == 'game':
+            if len(razor) == 0:
+                continue
             if currentGame == 'mirror' and currentGameSetting == 'position':
                 del razor[-1]
                 currentGame = 'razor'
@@ -522,29 +548,52 @@ while True:
             elif currentGame == 'razor' and currentGameSetting == 'direction':
                 del razor[-1]
                 currentGameSetting = 'position'
+            del burntRazor[-1], burntRazor[-1]
+
+            razor, burnt, notBurnt, burntRazor = Is_it_burnt(razor, mirror, boardPositionAll)
+
+
 
     if current == 'menu':
+
         if leftMouseClicked and 610 < mousePos[0] < 670 and 400 < mousePos[1] < 440:
             current = 'game'
             continue
+
         if leftMouseClicked and 610 < mousePos[0] < 670 and 460 < mousePos[1] < 500:
             openFile = input("Enter to open file. ") + '.txt'
             openData = open(openFile, 'r')
             while True:
                 mirrorData = openData.readline().rstrip('\n')
-
                 if mirrorData == '-':
                     break
                 mirror.append(list(map(lambda data: float(data.strip("'' ")), list(map(str, mirrorData.strip("[]").split(','))))))
             while True:
                 razorData = openData.readline().rstrip('\n')
-                if razorData == '':
+                if razorData == '-':
                     break
                 razor.append(list(map(lambda data: float(data.strip("'' ")), list(map(str, razorData.strip("[]").split(','))))))
+            while True:
+                burntRazorData = openData.readline().rstrip('\n')
+                if burntRazorData == '':
+                    break
+                burntRazor.append(list(map(lambda data: float(data.strip("'' ")), list(map(str, burntRazorData.strip("[]").split(','))))))
             openData.close()
-            print('opened')
+            razor, burnt, notBurnt, burntRazor = Is_it_burnt(razor, mirror, boardPositionAll)
             current = 'game'
+            if len(mirror) == len(razor):
+                currentGame = 'razor'
+                if len(razor) > 0:
+                    if len(razor[-1]) <= 3:
+                        currentGameSetting = 'direction'
+            else:
+                currentGame = 'mirror'
+                if len(mirror) > 0:
+                    if len(mirror[-1]) <= 2:
+                        currentGameSetting = 'direction'
+            print('opened')
             continue
+
         if leftMouseClicked and 610 < mousePos[0] < 670 and 520 < mousePos[1] < 560:
             pygame.quit()
             sys.exit()
@@ -739,7 +788,7 @@ while True:
                         if len(razor[-1]) == 4:
                             currentGame = 'mirror'
                             currentGameSetting = 'position'
-                            razor, burnt, notBurnt = Is_it_burnt(razor, mirror, boardPositionAll)
+                            razor, burnt, notBurnt, burntRazor = Is_it_burnt(razor, mirror, boardPositionAll)
 
         elif currentGame == 'mirror':
             if currentGameSetting == 'position':
@@ -775,7 +824,7 @@ while True:
                     mirror[-1].append(direction)
                     currentGame = 'razor'
                     currentGameSetting = 'position'
-                    razor, burnt, notBurnt = Is_it_burnt(razor, mirror, boardPositionAll)
+                    razor, burnt, notBurnt, burntRazor = Is_it_burnt(razor, mirror, boardPositionAll)
 
         fontSave = pygame.font.Font(font, 20)
         if 1080 < mousePos[0] < 1120 and 580 < mousePos[1] < 620:
@@ -796,6 +845,9 @@ while True:
             saveData.write('-\n')
             for i in range(len(razor)):
                 saveData.write(str(razor[i]) + '\n')
+            saveData.write('-\n')
+            for i in range(len(burntRazor)):
+                saveData.write(str(burntRazor[i]) + '\n')
             saveData.close()
             print('Saved')
 
