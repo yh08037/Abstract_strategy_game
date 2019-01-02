@@ -575,8 +575,12 @@ while True:
                 razor.append(list(map(lambda data: float(data.strip("'' ")), list(map(str, razorData.strip("[]").split(','))))))
             while True:
                 burntRazorData = openData.readline().rstrip('\n')
+                print(burntRazorData)
                 if burntRazorData == '':
                     break
+                elif burntRazorData == '[]':
+                    burntRazor.append([])
+                    continue
                 burntRazor.append(list(map(lambda data: float(data.strip("'' ")), list(map(str, burntRazorData.strip("[]").split(','))))))
             openData.close()
             razor, burnt, notBurnt, burntRazor = Is_it_burnt(razor, mirror, boardPositionAll)
