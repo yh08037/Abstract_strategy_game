@@ -525,6 +525,7 @@ notBurnt = 0
 
 turn = 1
 
+
 while True:
     leftMouseClicked = False
     escClicked = False
@@ -573,7 +574,7 @@ while True:
             continue
 
         if leftMouseClicked and 610 < mousePos[0] < 670 and 460 < mousePos[1] < 500:
-            openFile = input("Enter to open file. ") + '.txt'
+            openFile = input("Input to open file. ") + '.txt'
             openData = open(openFile, 'r')
             while True:
                 mirrorData = openData.readline().rstrip('\n')
@@ -585,14 +586,21 @@ while True:
                 if razorData == '-':
                     break
                 razor.append(list(map(lambda data: float(data.strip("'' ")), list(map(str, razorData.strip("[]").split(','))))))
+            burntRazorData = openData.readline().rstrip('\n')
             while True:
-                burntRazorData = openData.readline().rstrip('\n')
                 if burntRazorData == '':
                     break
-                elif burntRazorData == '[]':
-                    burntRazor.append([])
-                    continue
-                burntRazor.append(list(map(lambda data: float(data.strip("'' ")), list(map(str, burntRazorData.strip("[]").split(','))))))
+                burntRazorElement = []
+                while True:
+                    print(burntRazorData)
+                    if burntRazorData == '':
+                        break
+                    elif burntRazorData == '*':
+                        burntRazor.append(burntRazorElement)
+                        burntRazorData = openData.readline().rstrip('\n')
+                        break
+                    burntRazorElement.append(list(map(lambda data: float(data.strip("'' ")), list(map(str, burntRazorData.strip("[]").split(','))))))
+                    burntRazorData = openData.readline().rstrip('\n')
             openData.close()
             razor, burnt, notBurnt, burntRazor = Is_it_burnt(razor, mirror, boardPositionAll)
             current = 'game'
@@ -648,6 +656,7 @@ while True:
         pygame.display.flip()
 
     elif current == 'game':
+        print(burntRazor)
         pygame.draw.aalines(screen, colorWhite, False, boardPositionVertex)
         pygame.gfxdraw.aapolygon(screen, boardPositionVertex, colorWhite)
 
@@ -862,7 +871,9 @@ while True:
                 saveData.write(str(razor[i]) + '\n')
             saveData.write('-\n')
             for i in range(len(burntRazor)):
-                saveData.write(str(burntRazor[i]) + '\n')
+                for j in range(len(burntRazor[i])):
+                    saveData.write(str(burntRazor[i][j]) + '\n')
+                saveData.write('*' + '\n')
             saveData.close()
             print('Saved')
 
