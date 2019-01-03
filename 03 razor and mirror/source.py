@@ -429,7 +429,6 @@ def Is_it_burnt(razor, mirror, boardPositionAll):
         if len(i) == 5:
            burnt += 1
     notBurnt = len(razor) - burnt
-    print(razor, burntRazor)
     return razor, burnt, notBurnt, burntRazor
 
 
@@ -468,9 +467,9 @@ for i in range(6):
         newEdgePoint = (round(startPoint_X + gap_X * j, 1), round(startPoint_Y + gap_Y * j, 1))
         boardPositionEdgeElement.append(newEdgePoint)
     boardPositionEdge.append(boardPositionEdgeElement)
-
-boardPositionAll.append(boardPositionEdge[0])
+boardPositionAll.append(list(boardPositionEdge[0]))
 boardPositionAll[0].append(boardPositionEdge[1][0])
+
 for i in range(8):
     boardPositionAllElement = []
     startPoint_X = boardPositionEdge[5][7 - i][0]
@@ -495,6 +494,17 @@ boardPositionAll.append(boardPositionEdge[3][:-1])
 boardPositionAll[-1].append(boardPositionEdge[3][7])
 boardPositionAll[-1].append(boardPositionEdge[4][0])
 boardPositionAll[-1].reverse()
+
+boardPositionAll[3][11] = boardPositionEdge[1][3]
+boardPositionAll[6][14] = boardPositionEdge[1][6]
+boardPositionAll[10][14] = boardPositionEdge[2][2]
+boardPositionAll[11][13] = boardPositionEdge[2][3]
+boardPositionAll[12][12] = boardPositionEdge[2][4]
+boardPositionAll[14][10] = boardPositionEdge[2][5]
+boardPositionAll[15][9] = boardPositionEdge[2][7]
+boardPositionAll[15][0] = boardPositionEdge[4][1]
+boardPositionAll[12][0] = boardPositionEdge[4][4]
+boardPositionAll[10][0] = boardPositionEdge[4][6]
 
 pygame.init()
 pygame.display.set_caption("Mirror and Razor")
@@ -548,8 +558,10 @@ while True:
             elif currentGame == 'razor' and currentGameSetting == 'direction':
                 del razor[-1]
                 currentGameSetting = 'position'
-            del burntRazor[-1], burntRazor[-1]
-
+            if len(burntRazor):
+                del burntRazor[-1]
+            if len(burntRazor):
+                del burntRazor[-1]
             razor, burnt, notBurnt, burntRazor = Is_it_burnt(razor, mirror, boardPositionAll)
 
 
@@ -575,7 +587,6 @@ while True:
                 razor.append(list(map(lambda data: float(data.strip("'' ")), list(map(str, razorData.strip("[]").split(','))))))
             while True:
                 burntRazorData = openData.readline().rstrip('\n')
-                print(burntRazorData)
                 if burntRazorData == '':
                     break
                 elif burntRazorData == '[]':
