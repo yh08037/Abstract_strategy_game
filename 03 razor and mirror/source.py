@@ -20,7 +20,6 @@ def mirror_delta(direction):
 
 
 def razor_direction(board, x, y, direction):
-    print(x, y, direction)
     if x < 8:
         if direction == 0:
             if len(board[x]) == y + 1:
@@ -430,7 +429,6 @@ def Is_it_burnt(razor, mirror, boardPositionAll):
         if len(i) == 5:
            burnt += 1
     notBurnt = len(razor) - burnt
-    print()
     return razor, burnt, notBurnt, burntRazor
 
 
