@@ -20,6 +20,7 @@ def mirror_delta(direction):
 
 
 def razor_direction(board, x, y, direction):
+    print(x, y, direction)
     if x < 8:
         if direction == 0:
             if len(board[x]) == y + 1:
@@ -40,7 +41,7 @@ def razor_direction(board, x, y, direction):
                     board = razor_direction(board, x, y + 1, direction)
 
         elif direction == 1:
-            if len(board[x]) == y + 1 or len(board) == x + 1:
+            if len(board) == x + 1:
                 return board
             if board[x+1][y+1][0] == '-':
                 board = razor_direction(board, x+1, y+1, direction)
@@ -330,7 +331,7 @@ def razor_direction(board, x, y, direction):
                     board = razor_direction(board, x-1, y, direction)
 
         elif direction == 5:
-            if x == 0 or len(board[x]) == y + 1:
+            if x == 0:
                 return board
             if board[x - 1][y+1][0] == '-':
                 board = razor_direction(board, x - 1, y+1, direction)
@@ -429,6 +430,7 @@ def Is_it_burnt(razor, mirror, boardPositionAll):
         if len(i) == 5:
            burnt += 1
     notBurnt = len(razor) - burnt
+    print()
     return razor, burnt, notBurnt, burntRazor
 
 
@@ -500,7 +502,7 @@ boardPositionAll[6][14] = boardPositionEdge[1][6]
 boardPositionAll[10][14] = boardPositionEdge[2][2]
 boardPositionAll[11][13] = boardPositionEdge[2][3]
 boardPositionAll[12][12] = boardPositionEdge[2][4]
-boardPositionAll[14][10] = boardPositionEdge[2][5]
+boardPositionAll[14][10] = boardPositionEdge[2][6]
 boardPositionAll[15][9] = boardPositionEdge[2][7]
 boardPositionAll[15][0] = boardPositionEdge[4][1]
 boardPositionAll[12][0] = boardPositionEdge[4][4]
