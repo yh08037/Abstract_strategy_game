@@ -549,6 +549,8 @@ while True:
                 continue
             if currentGame == 'mirror' and currentGameSetting == 'position':
                 del razor[-1]
+                if len(burntRazor):
+                    del burntRazor[-1]
                 currentGame = 'razor'
             elif currentGame == 'mirror' and currentGameSetting == 'direction':
                 del mirror[-1]
@@ -556,11 +558,11 @@ while True:
             elif currentGame == 'razor' and currentGameSetting == 'position':
                 del mirror[-1]
                 currentGame = 'mirror'
+                if len(burntRazor):
+                    del burntRazor[-1]
             elif currentGame == 'razor' and currentGameSetting == 'direction':
                 del razor[-1]
                 currentGameSetting = 'position'
-            if len(burntRazor):
-                del burntRazor[-1]
             if len(burntRazor):
                 del burntRazor[-1]
             razor, burnt, notBurnt, burntRazor = Is_it_burnt(razor, mirror, boardPositionAll)
@@ -874,5 +876,9 @@ while True:
                 saveData.write('*' + '\n')
             saveData.close()
             print('Saved')
+
+    for i in range(len(burntRazor)):
+        print(burntRazor[i])
+    print()
 
     clock.tick(FPS)
