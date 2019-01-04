@@ -877,8 +877,4 @@ while True:
             saveData.close()
             print('Saved')
 
-    for i in range(len(burntRazor)):
-        print(burntRazor[i])
-    print()
-
     clock.tick(FPS)
