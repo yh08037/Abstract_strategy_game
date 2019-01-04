@@ -592,7 +592,6 @@ while True:
                     break
                 burntRazorElement = []
                 while True:
-                    print(burntRazorData)
                     if burntRazorData == '':
                         break
                     elif burntRazorData == '*':
@@ -656,7 +655,6 @@ while True:
         pygame.display.flip()
 
     elif current == 'game':
-        print(burntRazor)
         pygame.draw.aalines(screen, colorWhite, False, boardPositionVertex)
         pygame.gfxdraw.aapolygon(screen, boardPositionVertex, colorWhite)
 
