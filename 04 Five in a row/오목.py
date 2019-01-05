@@ -2,7 +2,6 @@ import pygame
 from pygame.locals import *
 import sys
 import math
-
 def Is_mousePos_in_boardAll(mousePos, boardPoint):
     Check_boardPointX = boardPoint[0] - 20  < mousePos[0] < boardPoint[0] + 20
     Check_boardPointY = boardPoint[1] - 20  < mousePos[1] < boardPoint[1] + 20
@@ -47,7 +46,7 @@ boardAll = []
 for i in range(15):
     boardAllElement = []
     for j in range(15):
-        boardAllElement.append((340 + i * 40, 60 + j * 40))
+        boardAllElement.append((340 + i * 40, 80 + j * 40))
     boardAll.append(boardAllElement)
     
 whitePlaced = []
@@ -115,13 +114,3 @@ while True:
     pygame.display.update()
     clock.tick(FPS)
     
-    
-    
-    
-    
-    
-    
-
-
-
-
