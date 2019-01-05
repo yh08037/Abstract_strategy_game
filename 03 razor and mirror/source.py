@@ -436,6 +436,7 @@ font = 'myfont.ttf'
 
 colorRed = (255, 0, 0)
 colorBrightRed = (222, 30, 30)
+colorDarkRed = (139, 0, 0)
 colorOrange = (255, 83, 51)
 colorDarkGray = (49, 51, 53)
 colorLightGray = (160, 160, 160)
@@ -699,7 +700,7 @@ while True:
                 pygame.gfxdraw.aacircle(screen, round(j[0]), round(j[1]), 2, colorWhite)
         for i in razor:
             if len(i) == 5:
-                pygame.draw.circle(screen, colorOrange, (round(i[0]), round(i[1])), 11)
+                pygame.draw.circle(screen, colorDarkRed, (round(i[0]), round(i[1])), 11)
 
             else:
                 pygame.gfxdraw.aacircle(screen, round(i[0]), round(i[1]), 11, colorOrange)
@@ -707,20 +708,20 @@ while True:
                 arrow = list(map(lambda x, y: x + y, i[0:2], razor_delta(i[2])))
                 arrowTale1 = list(map(lambda x, y: x+y, arrow, razor_delta(i[2], 1)))
                 arrowTale2 = list(map(lambda x, y: x+y, arrow, razor_delta(i[2], -1)))
-                pygame.draw.aaline(screen, colorOrange, i[0:2], arrow)
-                pygame.draw.aaline(screen, colorOrange, arrow, arrowTale1)
-                pygame.draw.aaline(screen, colorOrange, arrow, arrowTale2)
+                pygame.draw.line(screen, colorOrange, i[0:2], arrow)
+                pygame.draw.line(screen, colorOrange, arrow, arrowTale1)
+                pygame.draw.line(screen, colorOrange, arrow, arrowTale2)
             if len(i) >= 4:
                 arrow = list(map(lambda x, y: x + y, i[0:2], razor_delta(i[3])))
                 arrowTale1 = list(map(lambda x, y: x+y, arrow, razor_delta(i[3], 1)))
                 arrowTale2 = list(map(lambda x, y: x+y, arrow, razor_delta(i[3], -1)))
-                pygame.draw.aaline(screen, colorOrange, i[0:2], arrow)
-                pygame.draw.aaline(screen, colorOrange, arrow, arrowTale1)
-                pygame.draw.aaline(screen, colorOrange, arrow, arrowTale2)
+                pygame.draw.line(screen, colorOrange, i[0:2], arrow)
+                pygame.draw.line(screen, colorOrange, arrow, arrowTale1)
+                pygame.draw.line(screen, colorOrange, arrow, arrowTale2)
         for i in mirror:
             if len(i) == 3:
-                pygame.draw.aaline(screen, colorBrightBlue, list(map(lambda x, y: x - y, i[0:2], mirror_delta(i[2]))),
-                                   list(map(lambda x, y: x + y, i[0:2], mirror_delta(i[2]))))
+                pygame.draw.line(screen, colorBrightBlue, list(map(lambda x, y: x - y, i[0:2], mirror_delta(i[2]))),
+                                   list(map(lambda x, y: x + y, i[0:2], mirror_delta(i[2]))), 5)
 
         fontOrder = pygame.font.Font(font, 30)
         if currentGame == 'razor':
