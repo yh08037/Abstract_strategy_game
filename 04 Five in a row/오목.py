@@ -75,7 +75,7 @@ while True:
         #스크린, 색깔, x좌표, y좌표, (안티얼레이싱 활성화 여부)
         pygame.draw.aaline(screen, colorLightGray, boardAll[0][i], boardAll[14][i])
         pygame.draw.aaline(screen, colorLightGray, boardAll[i][0], boardAll[i][14])
-        boardVertex = [boardAll[0][0], boardAll[0][14], boardAll[14][14], boardAll[14][0]]
+    boardVertex = [boardAll[0][0], boardAll[0][14], boardAll[14][14], boardAll[14][0]]
     pygame.draw.aalines(screen, colorWhite, False, boardVertex)
     
     #i,j 값을 참고하여, x,y자리에 해당하는 곳에 희미한 선이 나온다.
