@@ -10,21 +10,22 @@ def Is_mousePos_in_boardAll(mousePos, boardPoint):
         return True 
     return False
 
+
 pygame.init()
 
 font = 'myfont.ttf'
 
 #RGB 포맷으로 색을 정의합니다.
-colorRed            = (255,   0,   0)
-colorBrightRed      = (222,  30,  30)
-colorOrange         = (255,  83,  51)
-colorDarkGray       = ( 49,  51,  53)
-colorLightGray      = (160, 160, 160)
-colorBlue           = (  0,   0, 255)
-colorBrightBlue     = (  0, 176, 255)
-colorWhite          = (255, 255, 255)
-colorGray           = (127, 127, 127)
-colorBlack          = (  0,   0,   0)
+colorRed        = (255,   0,   0)
+colorBrightRed  = (222,  30,  30)
+colorOrange     = (255,  83,  51)
+colorDarkGray   = ( 49,  51,  53)
+colorLightGray  = (160, 160, 160)
+colorBlue       = (  0,   0, 255)
+colorBrightBlue = (  0, 176, 255)
+colorWhite      = (255, 255, 255)
+colorGray       = (127, 127, 127)
+colorBlack      = (  0,   0,   0)
 
 leftMouse = 1
 rightMouse = 3
@@ -46,7 +47,10 @@ for i in range(15):
     boardAll.append(boardAllElement)
 
     
-    
+whitePlaced = []
+blackPlaced = []
+
+Is_turn_black = True
 
 while True:
     leftMouseClicked = False  #초기 세팅
@@ -55,17 +59,19 @@ while True:
         if event.type == KEYDOWN:  # 누르는 행위
             if event.key == K_ESCAPE:  # ESC
                 escClicked = True
-    if event.type == QUIT:  # X버튼 누르면 생기는 일
-        pygame.quit()
-        sys.exit()
-    if event.type == MOUSEBUTTONDOWN and event.button == leftMouse:  # 주클릭
-        leftMouseClicked = True
-    if event.type == pygame.MOUSEMOTION:  # 마우스 움직이면 그 좌표를 반환
-        mousePos = event.pos  # mousePos = (x좌표, y좌표)
+        if event.type == QUIT:  # X버튼 누르면 생기는 일
+            pygame.quit()
+            sys.exit()
+        if event.type == MOUSEBUTTONDOWN and event.button == leftMouse:  # 주클릭
+            leftMouseClicked = True
+        if event.type == pygame.MOUSEMOTION:  # 마우스 움직이면 그 좌표를 반환
+            mousePos = event.pos  # mousePos = (x좌표, y좌표)
+
             
     screen.fill(colorDarkGray)
     
     for i in range(15):
+        #스크린, 색깔, x좌표, y좌표, (안티얼레이싱 활성화 여부)
         pygame.draw.aaline(screen, colorLightGray, boardAll[0][i], boardAll[14][i])
         pygame.draw.aaline(screen, colorLightGray, boardAll[i][0], boardAll[i][14])
     pygame.draw.aalines(screen, colorWhite, False, [boardAll[0][0], boardAll[0][14], boardAll[14][14], boardAll[14][0]])
@@ -76,11 +82,26 @@ while True:
     for x in range(15):
         for y in range(15):
             if Is_mousePos_in_boardAll(mousePos, boardAll[x][y]):
-                pygame.draw.circle(screen, colorLightGray, boardAll[x][y], 10)                
-        IsBreak = True
-        break
-    if IsBreak:
-        break
+                pygame.draw.circle(screen, colorLightGray, boardAll[x][y], 10)
+                if leftMouseClicked:
+                    if Is_turn_black:
+                        blackPlaced.append(boardAll[x][y])                        
+                        Is_turn_black = False
+
+                    else:
+                        whirePlaced.append(boardAll[x][y])
+                        Is_turn_black = True
+                           
+                IsBreak = True
+                break
+        if IsBreak:
+            break
+    
+
+
+
+
+    
     
     pygame.display.update()
     clock.tick(FPS)
