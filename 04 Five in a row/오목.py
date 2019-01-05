@@ -47,7 +47,7 @@ boardAll = []
 for i in range(15):
     boardAllElement = []
     for j in range(15):
-        boardAllElement.append((340 + i * 40, 60 + j * 40))
+        boardAllElement.append((340 + i * 40, 80 + j * 40))
     boardAll.append(boardAllElement)
     
 whitePlaced = []
