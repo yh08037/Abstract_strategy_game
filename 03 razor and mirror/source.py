@@ -831,7 +831,6 @@ while True:
                     inclination = delta_Y / delta_X
                 else:
                     inclination = 100
-
                 if angle(-15) <= inclination < angle(15):
                     direction = 0
                 elif angle(15) <= inclination < angle(45):
