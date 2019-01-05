@@ -54,6 +54,8 @@ whitePlaced = []
 blackPlaced = []
 circleSize = 17
 Is_turn_black = True
+
+
 while True:
     leftMouseClicked = False  #초기 세팅
     escClicked = False
