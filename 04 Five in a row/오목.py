@@ -12,9 +12,7 @@ def Is_mousePos_in_boardAll(mousePos, boardPoint):
 
 pygame.init()
 
-'''
 font = 'myfont.ttf'
-'''
 
 #RGB 포맷으로 색을 정의합니다.
 colorRed            = (255,   0,   0)
