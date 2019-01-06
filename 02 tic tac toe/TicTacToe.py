@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 import sys
 
-#RGB 포맷으로 색 정의 
+#RGB 포맷으로 색 정의
 BLACK = (0,   0,   0  )
 WHITE = (255, 255, 255)
 
@@ -40,7 +40,7 @@ def Is_mousePos_in_boardPos(mousePos, boardPoint):
     Check_boardPointY = boardPoint[1] < mousePos[1] < boardPoint[1] + 200
     if Check_boardPointX and Check_boardPointY :
         return True
-    return False    
+    return False
 
 # X자 모양 그리는 함수
 def draw_X(boardPoint):
@@ -80,7 +80,7 @@ while True:
     # 가로세로줄 그리기
     for i in range(0, 4):
         pygame.draw.line(screen, BLACK, boardPos[0][i], boardPos[3][i], 5)
-        pygame.draw.line(screen, BLACK, boardPos[i][0], boardPos[i][3], 5)      
+        pygame.draw.line(screen, BLACK, boardPos[i][0], boardPos[i][3], 5)
 
 
     # 마우스 클릭 정보 저장하기
@@ -88,7 +88,7 @@ while True:
     for x in range(3):
         for y in range(3):
             if leftMouseClicked and Is_mousePos_in_boardPos(mousePos, boardPos[x][y]):
-                Is_it_Placed = boardPos[x][y] in X_placed or boardPos[x][y] in O_placed 
+                Is_it_Placed = boardPos[x][y] in X_placed or boardPos[x][y] in O_placed
                 if Is_turn_X and not Is_it_Placed:
                     X_placed.append(boardPos[x][y])
                     Is_turn_X = False
@@ -113,7 +113,7 @@ while True:
         printText("X turn")
     elif not Is_turn_X:
         printText("O turn")
-        
+
 
 
 
@@ -122,4 +122,3 @@ while True:
     #그린 것을 화면에 업데이트
     #이는 모든 draw명령 뒤에 위치해야한다
     pygame.display.update()
-
