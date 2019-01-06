@@ -19,6 +19,21 @@ def printText(msg, color, pos, fontsize, _font = 'myfont.ttf'):
     textRect.center = pos
     screen.blit(text, textRect)
 
+def guideline(screen, color, boardPoint, circleSize):
+    pointlist = [(boardPoint[0] - 15, boardPoint[1]+7), (boardPoint[0] - 15, boardPoint[1] + 15), (boardPoint[0] - 7, boardPoint[1] +15)]
+    pygame.draw.lines(screen, color, False, pointlist)
+    pointlist = [(boardPoint[0] + 15, boardPoint[1]+7), (boardPoint[0] + 15, boardPoint[1] + 15), (boardPoint[0] + 7, boardPoint[1] +15)]
+    pygame.draw.lines(screen, color, False, pointlist)
+    pointlist = [(boardPoint[0] + 15, boardPoint[1]-7), (boardPoint[0] + 15, boardPoint[1] - 15), (boardPoint[0] + 7, boardPoint[1] -15)]
+    pygame.draw.lines(screen, color, False, pointlist)
+    pointlist = [(boardPoint[0] - 15, boardPoint[1]-7), (boardPoint[0] - 15, boardPoint[1] - 15), (boardPoint[0] - 7, boardPoint[1] -15)]
+    pygame.draw.lines(screen, color, False, pointlist)
+    pygame.gfxdraw.aacircle(screen, boardPoint[0], boardPoint[1], 2, color)
+
+def Is_game_finished(placed):
+    for i in range(len(placed)):
+        pass
+
 pygame.init()
 font = 'myfont.ttf'
 
@@ -39,11 +54,11 @@ leftMouse = 1
 rightMouse = 3
 resolution = (1280, 720)
 FPS = 60
-clock = pygame.time.Clock()
 
 
 pygame.init()
 pygame.display.set_caption("오목")
+clock = pygame.time.Clock()
 screen = pygame.display.set_mode(resolution)
 boardAll = []
 for i in range(15):
@@ -80,7 +95,7 @@ while True:
         pygame.draw.line(screen, colorBlack, boardAll[0][i], boardAll[14][i])
         pygame.draw.line(screen, colorBlack, boardAll[i][0], boardAll[i][14])
     boardVertex = [boardAll[0][0], boardAll[0][14], boardAll[14][14], boardAll[14][0]]
-    pygame.draw.aalines(screen, colorBlack, True, boardVertex)
+    pygame.draw.aalines(screen, colorBlack, False, boardVertex)
     pygame.gfxdraw.aacircle(screen, boardAll[3][3][0], boardAll[3][3][1], 2, colorBlack)
     pygame.gfxdraw.aacircle(screen, boardAll[3][-3][0], boardAll[3][-4][1], 2, colorBlack)
     pygame.gfxdraw.aacircle(screen, boardAll[-4][3][0], boardAll[-4][3][1], 2, colorBlack)
@@ -93,14 +108,16 @@ while True:
     for x in range(15):
         for y in range(15):
             if Is_mousePos_in_boardAll(mousePos, boardAll[x][y]):
-                pygame.draw.circle(screen, colorLightGray, boardAll[x][y], circleSize)
-                if leftMouseClicked:
-                    Is_it_placed = boardAll[x][y] in whitePlaced or boardAll[x][y] in blackPlaced
-                    if Is_turn_black and not Is_it_placed:
+                Is_it_placed = boardAll[x][y] in whitePlaced or boardAll[x][y] in blackPlaced
+                if not Is_it_placed:
+                    guideline(screen, colorGray, boardAll[x][y], circleSize)
+                    if leftMouseClicked and Is_turn_black:
                         blackPlaced.append(boardAll[x][y])
+                        Is_game_finished(blackPlaced)
                         Is_turn_black = False
-                    elif not Is_turn_black and not Is_it_placed:
+                    elif leftMouseClicked and not Is_turn_black:
                         whitePlaced.append(boardAll[x][y])
+                        Is_game_finished(whitePlaced)
                         Is_turn_black = True
                 IsBreak = True
                 break
@@ -118,9 +135,5 @@ while True:
     elif not Is_turn_black:
         printText("White Turn!", colorBlack, (1080, 100), 40)
 
-    '''
-    Is_game_finished = 판별식(blackPlaced) (whitePlaced)
-       출력문은 5개가 맞추어져있다!, 아직이다...
-    '''
     pygame.display.update()
     clock.tick(FPS)
