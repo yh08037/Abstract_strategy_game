@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import sys
+import pygame.gfxdraw
 import math
 
 def Is_mousePos_in_boardAll(mousePos, boardPoint):
@@ -30,6 +31,7 @@ colorLightGray = (160, 160, 160)
 colorBlue = (0, 0, 255)
 colorBrightBlue = (0, 176, 255)
 colorWhite = (255, 255, 255)
+colorMilkWhite = (223, 220, 205)
 colorGray = (127, 127, 127)
 colorBlack = (0, 0, 0)
 
@@ -71,14 +73,20 @@ while True:
         if event.type == pygame.MOUSEMOTION:  # 마우스 움직이면 그 좌표를 반환
             mousePos = event.pos  # mousePos = (x좌표, y좌표)
 
-    screen.fill(colorDarkGray)  # 바탕화면
+    screen.fill(colorMilkWhite)  # 바탕화면
 
     for i in range(15):
         #스크린, 색깔, x좌표, y좌표, (안티얼레이싱 활성화 여부)
-        pygame.draw.aaline(screen, colorLightGray, boardAll[0][i], boardAll[14][i])
-        pygame.draw.aaline(screen, colorLightGray, boardAll[i][0], boardAll[i][14])
+        pygame.draw.line(screen, colorBlack, boardAll[0][i], boardAll[14][i])
+        pygame.draw.line(screen, colorBlack, boardAll[i][0], boardAll[i][14])
     boardVertex = [boardAll[0][0], boardAll[0][14], boardAll[14][14], boardAll[14][0]]
-    pygame.draw.aalines(screen, colorWhite, False, boardVertex)
+    pygame.draw.aalines(screen, colorBlack, True, boardVertex)
+    pygame.gfxdraw.aacircle(screen, boardAll[3][3][0], boardAll[3][3][1], 2, colorBlack)
+    pygame.gfxdraw.aacircle(screen, boardAll[3][-3][0], boardAll[3][-4][1], 2, colorBlack)
+    pygame.gfxdraw.aacircle(screen, boardAll[-4][3][0], boardAll[-4][3][1], 2, colorBlack)
+    pygame.gfxdraw.aacircle(screen, boardAll[-4][-4][0], boardAll[-4][-4][1], 2, colorBlack)
+    pygame.gfxdraw.aacircle(screen, boardAll[7][7][0], boardAll[7][7][1], 2, colorBlack)
+
 
     #i,j 값을 참고하여, x,y자리에 해당하는 곳에 희미한 선이 나온다.
     IsBreak = False
@@ -106,9 +114,9 @@ while True:
         pygame.draw.circle(screen, colorWhite, point, circleSize)
 
     if Is_turn_black:
-        printText("Black Turn!", colorWhite, (1080, 100), 40)
+        printText("Black Turn!", colorBlack, (1080, 100), 40)
     elif not Is_turn_black:
-        printText("White Turn!", colorWhite, (1080, 100), 40)
+        printText("White Turn!", colorBlack, (1080, 100), 40)
 
     '''
     Is_game_finished = 판별식(blackPlaced) (whitePlaced)
