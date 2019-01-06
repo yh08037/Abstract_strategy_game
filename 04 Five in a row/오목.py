@@ -32,7 +32,7 @@ def guideline(screen, color, boardPoint, circleSize):
 
 def Is_game_finished(placed):
     for i in range(len(placed)):
-        pass
+        # 돌 하나에 대해서 주변에 돌 있는지 확인하고 방향(8방향)을 체크, 그리고 두번째 돌 하나에 대해서 가지고 있는 방향을 이용하여 세번째 돌이 나열되어있는지 체크... 5번 반혹 후 하나라도 있으면 True, 없으면 False값을 결정
 
 pygame.init()
 font = 'myfont.ttf'
@@ -71,7 +71,7 @@ whitePlaced = []
 blackPlaced = []
 circleSize = 17
 Is_turn_black = True
-
+Is_game_finished = False
 
 while True:
     leftMouseClicked = False  #초기 세팅
@@ -113,16 +113,22 @@ while True:
                     guideline(screen, colorGray, boardAll[x][y], circleSize)
                     if leftMouseClicked and Is_turn_black:
                         blackPlaced.append(boardAll[x][y])
-                        Is_game_finished(blackPlaced)
+                        IsGameFinished = Check_game_finished(blackPlaced)
                         Is_turn_black = False
                     elif leftMouseClicked and not Is_turn_black:
                         whitePlaced.append(boardAll[x][y])
-                        Is_game_finished(whitePlaced)
+                        IsGameFinished = Is_game_finished(whitePlaced)
                         Is_turn_black = True
                 IsBreak = True
                 break
         if IsBreak:
             break
+
+    if Is_game_finished:
+        if Is_turn_black:
+            printText('white wins!', colorBlack, (100, 100), 40)
+        elif not Is_turn_black:
+            printText('black wins!', colorBlack, (100, 100), 40)
 
     # 좌표에 있는 알맞은 돌 나타냄
     for point in blackPlaced:
