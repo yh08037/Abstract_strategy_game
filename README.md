@@ -37,5 +37,5 @@ pip3 install pygame
 ---
 
 ## 추상전략 게임 크리에이터
-김도훈 (yh08037)
-윤대헌 (Greathoney)
+* 김도훈 (yh08037)
+* 윤대헌 (Greathoney)
