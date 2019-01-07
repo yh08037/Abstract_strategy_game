@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import sys
+import pygame.gfxdraw
 import math
 def Is_mousePos_in_boardAll(mousePos, boardPoint):
     Check_boardPointX = boardPoint[0] - 20  < mousePos[0] < boardPoint[0] + 20
@@ -17,6 +18,21 @@ def printText(msg, color, pos, fontsize, _font = 'myfont.ttf'):
     textRect.center = pos
     screen.blit(text, textRect)
 
+def guideline(screen, color, boardPoint, circleSize):
+    pointlist = [(boardPoint[0] - 15, boardPoint[1]+7), (boardPoint[0] - 15, boardPoint[1] + 15), (boardPoint[0] - 7, boardPoint[1] +15)]
+    pygame.draw.lines(screen, color, False, pointlist)
+    pointlist = [(boardPoint[0] + 15, boardPoint[1]+7), (boardPoint[0] + 15, boardPoint[1] + 15), (boardPoint[0] + 7, boardPoint[1] +15)]
+    pygame.draw.lines(screen, color, False, pointlist)
+    pointlist = [(boardPoint[0] + 15, boardPoint[1]-7), (boardPoint[0] + 15, boardPoint[1] - 15), (boardPoint[0] + 7, boardPoint[1] -15)]
+    pygame.draw.lines(screen, color, False, pointlist)
+    pointlist = [(boardPoint[0] - 15, boardPoint[1]-7), (boardPoint[0] - 15, boardPoint[1] - 15), (boardPoint[0] - 7, boardPoint[1] -15)]
+    pygame.draw.lines(screen, color, False, pointlist)
+    pygame.gfxdraw.aacircle(screen, boardPoint[0], boardPoint[1], 2, color)
+
+def Is_game_finished(placed):
+    for i in range(len(placed)):
+        # 돌 하나에 대해서 주변에 돌 있는지 확인하고 방향(8방향)을 체크, 그리고 두번째 돌 하나에 대해서 가지고 있는 방향을 이용하여 세번째 돌이 나열되어있는지 체크... 5번 반혹 후 하나라도 있으면 True, 없으면 False값을 결정
+
 pygame.init()
 font = 'myfont.ttf'
 
@@ -29,6 +45,7 @@ colorLightGray = (160, 160, 160)
 colorBlue = (0, 0, 255)
 colorBrightBlue = (0, 176, 255)
 colorWhite = (255, 255, 255)
+colorMilkWhite = (223, 220, 205)
 colorGray = (127, 127, 127)
 colorBlack = (0, 0, 0)
 
@@ -36,11 +53,11 @@ leftMouse = 1
 rightMouse = 3
 resolution = (1280, 720)
 FPS = 60
-clock = pygame.time.Clock()
 
 
 pygame.init()
 pygame.display.set_caption("오목")
+clock = pygame.time.Clock()
 screen = pygame.display.set_mode(resolution)
 boardAll = []
 for i in range(15):
@@ -48,11 +65,13 @@ for i in range(15):
     for j in range(15):
         boardAllElement.append((340 + i * 40, 80 + j * 40))
     boardAll.append(boardAllElement)
-    
+
 whitePlaced = []
 blackPlaced = []
 circleSize = 17
 Is_turn_black = True
+Is_game_finished = False
+
 while True:
     leftMouseClicked = False  #초기 세팅
     escClicked = False
@@ -67,50 +86,63 @@ while True:
             leftMouseClicked = True
         if event.type == pygame.MOUSEMOTION:  # 마우스 움직이면 그 좌표를 반환
             mousePos = event.pos  # mousePos = (x좌표, y좌표)
-            
-    screen.fill(colorDarkGray)  # 바탕화면
-    
+
+    screen.fill(colorMilkWhite)  # 바탕화면
+
     for i in range(15):
         #스크린, 색깔, x좌표, y좌표, (안티얼레이싱 활성화 여부)
-        pygame.draw.aaline(screen, colorLightGray, boardAll[0][i], boardAll[14][i])
-        pygame.draw.aaline(screen, colorLightGray, boardAll[i][0], boardAll[i][14])
-        boardVertex = [boardAll[0][0], boardAll[0][14], boardAll[14][14], boardAll[14][0]]
-    pygame.draw.aalines(screen, colorWhite, False, boardVertex)
-    
+        pygame.draw.line(screen, colorBlack, boardAll[0][i], boardAll[14][i])
+        pygame.draw.line(screen, colorBlack, boardAll[i][0], boardAll[i][14])
+    boardVertex = [boardAll[0][0], boardAll[0][14], boardAll[14][14], boardAll[14][0]]
+    pygame.draw.aalines(screen, colorBlack, False, boardVertex)
+    pygame.gfxdraw.aacircle(screen, boardAll[3][3][0], boardAll[3][3][1], 2, colorBlack)
+    pygame.gfxdraw.aacircle(screen, boardAll[3][-3][0], boardAll[3][-4][1], 2, colorBlack)
+    pygame.gfxdraw.aacircle(screen, boardAll[-4][3][0], boardAll[-4][3][1], 2, colorBlack)
+    pygame.gfxdraw.aacircle(screen, boardAll[-4][-4][0], boardAll[-4][-4][1], 2, colorBlack)
+    pygame.gfxdraw.aacircle(screen, boardAll[7][7][0], boardAll[7][7][1], 2, colorBlack)
+
+
     #i,j 값을 참고하여, x,y자리에 해당하는 곳에 희미한 선이 나온다.
     IsBreak = False
     for x in range(15):
         for y in range(15):
             if Is_mousePos_in_boardAll(mousePos, boardAll[x][y]):
-                pygame.draw.circle(screen, colorLightGray, boardAll[x][y], circleSize)
-                if leftMouseClicked:
-                    Is_it_placed = boardAll[x][y] in whitePlaced or boardAll[x][y] in blackPlaced
-                    if Is_turn_black and not Is_it_placed:
+                Is_it_placed = boardAll[x][y] in whitePlaced or boardAll[x][y] in blackPlaced
+                if not Is_it_placed:
+                    guideline(screen, colorGray, boardAll[x][y], circleSize)
+                    if leftMouseClicked and Is_turn_black:
                         blackPlaced.append(boardAll[x][y])
+                        IsGameFinished = Check_game_finished(blackPlaced)
                         Is_turn_black = False
-                    elif not Is_turn_black and not Is_it_placed:
+                    elif leftMouseClicked and not Is_turn_black:
                         whitePlaced.append(boardAll[x][y])
-                        Is_turn_black = True                             
+                        IsGameFinished = Is_game_finished(whitePlaced)
+                        Is_turn_black = True
                 IsBreak = True
                 break
         if IsBreak:
             break
-    
+
+    if Is_game_finished:
+        if Is_turn_black:
+            printText('white wins!', colorBlack, (100, 100), 40)
+        elif not Is_turn_black:
+            printText('black wins!', colorBlack, (100, 100), 40)
+
     # 좌표에 있는 알맞은 돌 나타냄
     for point in blackPlaced:
         pygame.draw.circle(screen, colorBlack, point, circleSize)
     for point in whitePlaced:
         pygame.draw.circle(screen, colorWhite, point, circleSize)
-    
-    if Is_turn_black:
-        printText("Black Turn!", colorWhite, (1080, 100), 40)       
-    elif not Is_turn_black:
-        printText("White Turn!", colorWhite, (1080, 100), 40)
 
-    '''
-    Is_game_finished = 판별식(blackPlaced) (whitePlaced)
-       출력문은 5개가 맞추어져있다!, 아직이다...
-    '''
+    if Is_turn_black:
+        printText("Black Turn!", colorBlack, (1080, 100), 40)
+    elif not Is_turn_black:
+        printText("White Turn!", colorBlack, (1080, 100), 40)
+
     pygame.display.update()
     clock.tick(FPS)
+<<<<<<< HEAD
     
+=======
+>>>>>>> 8c75feeab4a044480f874143896c511da2475d4c
