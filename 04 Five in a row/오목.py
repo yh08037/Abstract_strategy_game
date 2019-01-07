@@ -142,7 +142,3 @@ while True:
 
     pygame.display.update()
     clock.tick(FPS)
-<<<<<<< HEAD
-    
-=======
->>>>>>> 8c75feeab4a044480f874143896c511da2475d4c
