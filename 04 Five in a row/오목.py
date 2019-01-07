@@ -3,6 +3,7 @@ from pygame.locals import *
 import sys
 import pygame.gfxdraw
 import math
+
 def Is_mousePos_in_boardAll(mousePos, boardPoint):
     Check_boardPointX = boardPoint[0] - 20  < mousePos[0] < boardPoint[0] + 20
     Check_boardPointY = boardPoint[1] - 20  < mousePos[1] < boardPoint[1] + 20
@@ -29,8 +30,8 @@ def guideline(screen, color, boardPoint, circleSize):
     pygame.draw.lines(screen, color, False, pointlist)
     pygame.gfxdraw.aacircle(screen, boardPoint[0], boardPoint[1], 2, color)
 
-def Is_game_finished(placed):
-    for i in range(len(placed)):
+def Check_game_finished(placed):
+    return False
         # 돌 하나에 대해서 주변에 돌 있는지 확인하고 방향(8방향)을 체크, 그리고 두번째 돌 하나에 대해서 가지고 있는 방향을 이용하여 세번째 돌이 나열되어있는지 체크... 5번 반혹 후 하나라도 있으면 True, 없으면 False값을 결정
 
 pygame.init()
@@ -70,7 +71,7 @@ whitePlaced = []
 blackPlaced = []
 circleSize = 17
 Is_turn_black = True
-Is_game_finished = False
+Isgamefinished = False
 
 while True:
     leftMouseClicked = False  #초기 세팅
@@ -116,14 +117,14 @@ while True:
                         Is_turn_black = False
                     elif leftMouseClicked and not Is_turn_black:
                         whitePlaced.append(boardAll[x][y])
-                        IsGameFinished = Is_game_finished(whitePlaced)
+                        IsGameFinished = Check_game_finished(whitePlaced)
                         Is_turn_black = True
                 IsBreak = True
                 break
         if IsBreak:
             break
 
-    if Is_game_finished:
+    if Isgamefinished:
         if Is_turn_black:
             printText('white wins!', colorBlack, (100, 100), 40)
         elif not Is_turn_black:
