@@ -32,7 +32,9 @@ def guideline(screen, color, boardPoint, circleSize):
 
 def Check_game_finished(placed):
     return False
-        # 돌 하나에 대해서 주변에 돌 있는지 확인하고 방향(8방향)을 체크, 그리고 두번째 돌 하나에 대해서 가지고 있는 방향을 이용하여 세번째 돌이 나열되어있는지 체크... 5번 반혹 후 하나라도 있으면 True, 없으면 False값을 결정
+    # 돌 하나에 대해서 주변에 돌 있는지 확인하고 방향(8방향)을 체크,
+    # 그리고 두번째 돌 하나에 대해서 가지고 있는 방향을 이용하여 세번째 돌이 나열되어있는지 체크...
+    # 5번 반혹 후 하나라도 있으면 True, 없으면 False값을 결정
 
 pygame.init()
 font = 'myfont.ttf'
