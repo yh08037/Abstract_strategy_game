@@ -1,4 +1,5 @@
 import sys
+import os
 import pygame
 import pygame.gfxdraw
 from pygame.locals import *
@@ -578,7 +579,11 @@ while True:
 
         if leftMouseClicked and 610 < mousePos[0] < 670 and 460 < mousePos[1] < 500:
             openFile = input("Input to open file. ") + '.txt'
-            openData = open(openFile, 'r')
+            if os.path.exists('openFile'):
+                openData = open(openFile, 'r')
+            else:
+                print('Not exists')
+                continue
             while True:
                 mirrorData = openData.readline().rstrip('\n')
                 if mirrorData == '-':
