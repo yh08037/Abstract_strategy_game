@@ -135,8 +135,10 @@ while True:
     # 좌표에 있는 알맞은 돌 나타냄
     for point in blackPlaced:
         pygame.draw.circle(screen, colorBlack, point, circleSize)
+        pygame.gfxdraw.aacircle(screen, point[0], point[1], circleSize, colorWhite)
     for point in whitePlaced:
         pygame.draw.circle(screen, colorWhite, point, circleSize)
+        pygame.gfxdraw.aacircle(screen, point[0], point[1], circleSize, colorGray)
 
     if Is_turn_black:
         printText("Black Turn!", colorBlack, (1080, 100), 40)
