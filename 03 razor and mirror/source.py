@@ -579,7 +579,7 @@ while True:
 
         if leftMouseClicked and 610 < mousePos[0] < 670 and 460 < mousePos[1] < 500:
             openFile = input("Input to open file. ") + '.txt'
-            if os.path.exists('openFile'):
+            if os.path.exists(openFile):
                 openData = open(openFile, 'r')
             else:
                 print('Not exists')
