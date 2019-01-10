@@ -29,9 +29,11 @@ rightMouse = 3
 clock = pygame.time.Clock()
 
 
-O_placed = []
 X_placed = []
+O_placed = []
 Is_turn_X = True
+X_win = False
+O_win = False
 
 
 # 마우스 위치 지정 함수
@@ -57,6 +59,33 @@ def printText(msg, color='BLACK', pos=(1100, 150)):
     textRect.center = pos
 
     screen.blit(textSurface, textRect)
+
+def Is_three_in_a_row(boardPos, placedPos):
+    onBoard = []
+    for i in range(3):
+        for j in range(3):
+            if boardPos[i][j] in placedPos:
+                onBoard.append(True)
+            else:
+                onBoard.append(False)
+    if onBoard[0] and onBoard[1] and onBoard[2]:
+        return True
+    elif onBoard[3] and onBoard[4] and onBoard[5]:
+        return True
+    elif onBoard[6] and onBoard[7] and onBoard[8]:
+        return True
+    elif onBoard[0] and onBoard[3] and onBoard[6]:
+        return True
+    elif onBoard[1] and onBoard[4] and onBoard[7]:
+        return True
+    elif onBoard[2] and onBoard[5] and onBoard[8]:
+        return True
+    elif onBoard[0] and onBoard[4] and onBoard[8]:
+        return True
+    elif onBoard[2] and onBoard[4] and onBoard[6]:
+        return True
+    else:
+        return False
 
 
 while True:
@@ -91,9 +120,13 @@ while True:
                 Is_it_Placed = boardPos[x][y] in X_placed or boardPos[x][y] in O_placed
                 if Is_turn_X and not Is_it_Placed:
                     X_placed.append(boardPos[x][y])
+                    if Is_three_in_a_row(boardPos, X_placed):
+                        X_win = True
                     Is_turn_X = False
                 elif not Is_turn_X and not Is_it_Placed:
                     O_placed.append(boardPos[x][y])
+                    if Is_three_in_a_row(boardPos, O_placed):
+                        O_win = True
                     Is_turn_X = True
                 IsBreak = True
                 break
@@ -115,6 +148,10 @@ while True:
         printText("O turn")
 
 
+    if X_win:
+        printText("X win!", 'BLACK', (1100, 400))
+    elif O_win:
+        printtext("O win!", 'BLACK', (1100, 400))
 
 
 
