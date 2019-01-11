@@ -28,6 +28,8 @@ leftMouse = 1
 rightMouse = 3
 clock = pygame.time.Clock()
 
+current = 'menu'
+gameOver = False
 
 X_placed = []
 O_placed = []
@@ -106,52 +108,72 @@ while True:
 
     screen.fill(WHITE)
 
-    # 가로세로줄 그리기
-    for i in range(0, 4):
-        pygame.draw.line(screen, BLACK, boardPos[0][i], boardPos[3][i], 5)
-        pygame.draw.line(screen, BLACK, boardPos[i][0], boardPos[i][3], 5)
 
 
-    # 마우스 클릭 정보 저장하기
-    IsBreak = False
-    for x in range(3):
-        for y in range(3):
-            if leftMouseClicked and Is_mousePos_in_boardPos(mousePos, boardPos[x][y]):
-                Is_it_Placed = boardPos[x][y] in X_placed or boardPos[x][y] in O_placed
-                if Is_turn_X and not Is_it_Placed:
-                    X_placed.append(boardPos[x][y])
-                    if Is_three_in_a_row(boardPos, X_placed):
-                        X_win = True
-                    Is_turn_X = False
-                elif not Is_turn_X and not Is_it_Placed:
-                    O_placed.append(boardPos[x][y])
-                    if Is_three_in_a_row(boardPos, O_placed):
-                        O_win = True
-                    Is_turn_X = True
-                IsBreak = True
-                break
-        if IsBreak:
-            break
+    if current == 'menu':
+        printText("Tic Tac Toe", 'BLACK', (640, 200))
+        printText("start", 'BLACK', (640, 400))
+        printText("quit", 'BLACK', (640, 500))
+
+        if leftMouseClicked:
+            if 540 < mousePos[0] < 740 and 380 < mousePos[1] < 420:
+                current = 'game'
+            elif 540 < mousePos[0] < 740 and 480 < mousePos[1] < 520:
+                pygame.quit()
+                sys.exit()
 
 
-    # O, X 그리기
-    for point in X_placed:
-        draw_X(point)
-    for point in O_placed:
-        pygame.draw.circle(screen, BLACK, (point[0]+100, point[1]+100), 80, 13)
+    elif current == 'game':
+
+        # 가로세로줄 그리기
+        for i in range(0, 4):
+            pygame.draw.line(screen, BLACK, boardPos[0][i], boardPos[3][i], 5)
+            pygame.draw.line(screen, BLACK, boardPos[i][0], boardPos[i][3], 5)
+
+        if not gameOver:
+            # 마우스 클릭 정보 저장하기
+            IsBreak = False
+            for x in range(3):
+                for y in range(3):
+                    if leftMouseClicked and Is_mousePos_in_boardPos(mousePos, boardPos[x][y]):
+                        Is_it_Placed = boardPos[x][y] in X_placed or boardPos[x][y] in O_placed
+                        if Is_turn_X and not Is_it_Placed:
+                            X_placed.append(boardPos[x][y])
+                            if Is_three_in_a_row(boardPos, X_placed):
+                                X_win = True
+                            Is_turn_X = False
+                        elif not Is_turn_X and not Is_it_Placed:
+                            O_placed.append(boardPos[x][y])
+                            if Is_three_in_a_row(boardPos, O_placed):
+                                O_win = True
+                            Is_turn_X = True
+                        IsBreak = True
+                        break
+                if IsBreak:
+                    break
 
 
-    # 차례 나타내기
-    if Is_turn_X:
-        printText("X turn")
-    elif not Is_turn_X:
-        printText("O turn")
+        # O, X 그리기
+        for point in X_placed:
+            draw_X(point)
+        for point in O_placed:
+            pygame.draw.circle(screen, BLACK, (point[0]+100, point[1]+100), 80, 13)
 
 
-    if X_win:
-        printText("X win!", 'BLACK', (1100, 400))
-    elif O_win:
-        printtext("O win!", 'BLACK', (1100, 400))
+        # 차례 나타내기
+        if Is_turn_X:
+            printText("X turn")
+        elif not Is_turn_X:
+            printText("O turn")
+
+
+        if X_win:
+            printText("X win!", 'BLACK', (1100, 400))
+            gameOver = True
+        elif O_win:
+            printtext("O win!", 'BLACK', (1100, 400))
+            gameOver = True
+
 
 
 
