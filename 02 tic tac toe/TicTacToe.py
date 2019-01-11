@@ -109,12 +109,13 @@ while True:
     screen.fill(WHITE)
 
 
-
+    # 게임 시작 전 메인 메뉴 화면
     if current == 'menu':
         printText("Tic Tac Toe", 'BLACK', (640, 200))
         printText("start", 'BLACK', (640, 400))
         printText("quit", 'BLACK', (640, 500))
 
+        # 게임 시작 또는 나기기 버튼 클릭 여부 확인
         if leftMouseClicked:
             if 540 < mousePos[0] < 740 and 380 < mousePos[1] < 420:
                 current = 'game'
@@ -122,7 +123,7 @@ while True:
                 pygame.quit()
                 sys.exit()
 
-
+    # 게임 진행 중 화면
     elif current == 'game':
 
         # 가로세로줄 그리기
@@ -130,8 +131,9 @@ while True:
             pygame.draw.line(screen, BLACK, boardPos[0][i], boardPos[3][i], 5)
             pygame.draw.line(screen, BLACK, boardPos[i][0], boardPos[i][3], 5)
 
+
+        # 게임이 끝나지 않았을 때 마우스 클릭 정보 저장하기
         if not gameOver:
-            # 마우스 클릭 정보 저장하기
             IsBreak = False
             for x in range(3):
                 for y in range(3):
@@ -166,7 +168,7 @@ while True:
         elif not Is_turn_X:
             printText("O turn")
 
-
+        # 승패 여부 출력하기
         if X_win:
             printText("X win!", 'BLACK', (1100, 400))
             gameOver = True
