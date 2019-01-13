@@ -55,13 +55,14 @@ def draw_X(boardPoint):
     pygame.draw.polygon(screen, BLACK, rect2)
 
 # printText 함수
-def printText(msg, color='BLACK', pos=(1100, 150)):
+def printText(msg, color='BLACK', pos=(180, 150)):
     textSurface = font.render(msg, True, pygame.Color(color), None)
     textRect = textSurface.get_rect()
     textRect.center = pos
 
     screen.blit(textSurface, textRect)
 
+# X 또는 O의 삼목 여부를 확인하는 함수
 def Is_three_in_a_row(boardPos, placedPos):
     onBoard = []
     for i in range(3):
@@ -88,6 +89,23 @@ def Is_three_in_a_row(boardPos, placedPos):
         return True
     else:
         return False
+
+# 게임 진행과 관련된 모든 변수를 초기화하는 함수
+def InitializeVariance():
+    global gameOver
+    global X_placed
+    global O_placed
+    global Is_turn_X
+    global X_win
+    global O_win
+
+    gameOver = False
+    X_placed = []
+    O_placed = []
+    Is_turn_X = True
+    X_win = False
+    O_win = False
+
 
 
 while True:
@@ -143,16 +161,44 @@ while True:
                             X_placed.append(boardPos[x][y])
                             if Is_three_in_a_row(boardPos, X_placed):
                                 X_win = True
+                                gameOver = True
                             Is_turn_X = False
                         elif not Is_turn_X and not Is_it_Placed:
                             O_placed.append(boardPos[x][y])
                             if Is_three_in_a_row(boardPos, O_placed):
                                 O_win = True
+                                gameOver = True
                             Is_turn_X = True
                         IsBreak = True
                         break
                 if IsBreak:
                     break
+
+        elif gameOver:
+            # 승패 여부 출력하기
+            if X_win:
+                printText("X win!", 'BLACK', (180, 400))
+            elif O_win:
+                printText("O win!", 'BLACK', (180, 400))
+
+
+            # 다시 시작 또는 끝내기 출력
+            printText("Restart", 'BLACK', (1100, 300))
+            printText("Main", 'BLACK', (1100, 400))
+            printText("Quit", 'BLACK', (1100, 500))
+
+
+            # 다시 시작 또는 나가기 버튼 클릭 확인
+            if leftMouseClicked:
+                if 1000 < mousePos[0] < 1200 and 280 < mousePos[1] < 320:
+                    InitializeVariance()
+                elif 1000 < mousePos[0] < 1200 and 380 < mousePos[1] < 420:
+                    current = 'menu'
+                    InitializeVariance()
+                elif 1000 < mousePos[0] < 1200 and 480 < mousePos[1] < 520:
+                    pygame.quit()
+                    sys.exit()
+
 
 
         # O, X 그리기
@@ -167,14 +213,6 @@ while True:
             printText("X turn")
         elif not Is_turn_X:
             printText("O turn")
-
-        # 승패 여부 출력하기
-        if X_win:
-            printText("X win!", 'BLACK', (1100, 400))
-            gameOver = True
-        elif O_win:
-            printtext("O win!", 'BLACK', (1100, 400))
-            gameOver = True
 
 
 
