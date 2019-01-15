@@ -133,11 +133,17 @@ while True:
         printText("start", 'BLACK', (640, 400))
         printText("quit", 'BLACK', (640, 500))
 
+
+
         # 게임 시작 또는 나기기 버튼 클릭 여부 확인
-        if leftMouseClicked:
-            if 540 < mousePos[0] < 740 and 380 < mousePos[1] < 420:
+
+        if 540 < mousePos[0] < 740 and 370 < mousePos[1] < 430:
+            pygame.draw.rect(screen, BLACK, [540, 370, 200, 60], 3)
+            if leftMouseClicked:
                 current = 'game'
-            elif 540 < mousePos[0] < 740 and 480 < mousePos[1] < 520:
+        elif 540 < mousePos[0] < 740 and 470 < mousePos[1] < 530:
+            pygame.draw.rect(screen, BLACK, [540, 470, 200, 60], 3)
+            if leftMouseClicked:
                 pygame.quit()
                 sys.exit()
 
@@ -189,13 +195,19 @@ while True:
 
 
             # 다시 시작 또는 나가기 버튼 클릭 확인
-            if leftMouseClicked:
-                if 1000 < mousePos[0] < 1200 and 280 < mousePos[1] < 320:
+
+            if 1000 < mousePos[0] < 1200 and 270 < mousePos[1] < 330:
+                pygame.draw.rect(screen, BLACK, [1000, 270, 200, 60], 3)
+                if leftMouseClicked:
                     InitializeVariance()
-                elif 1000 < mousePos[0] < 1200 and 380 < mousePos[1] < 420:
+            elif 1000 < mousePos[0] < 1200 and 370 < mousePos[1] < 430:
+                pygame.draw.rect(screen, BLACK, [1000, 370, 200, 60], 3)
+                if leftMouseClicked:
                     current = 'menu'
                     InitializeVariance()
-                elif 1000 < mousePos[0] < 1200 and 480 < mousePos[1] < 520:
+            elif 1000 < mousePos[0] < 1200 and 470 < mousePos[1] < 530:
+                pygame.draw.rect(screen, BLACK, [1000, 470, 200, 60], 3)
+                if leftMouseClicked:
                     pygame.quit()
                     sys.exit()
 
