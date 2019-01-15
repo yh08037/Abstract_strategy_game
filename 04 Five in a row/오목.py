@@ -31,6 +31,54 @@ def guideline(screen, color, boardPoint, circleSize):
     pygame.gfxdraw.aacircle(screen, boardPoint[0], boardPoint[1], 2, color)
 
 def Check_game_finished(placed):
+    for stone in placed:
+        for i in range(1, 5):
+            if not (stone[0] - 40 * i, stone[1] - 40 * i) in placed:
+                break
+        else:
+            return True
+
+        for i in range(1, 5):
+            if not (stone[0], stone[1] - 40 * i) in placed:
+                break
+        else:
+            return True
+
+        for i in range(1, 5):
+            if not (stone[0] + 40 * i, stone[1] - 40 * i) in placed:
+                break
+        else:
+            return True
+
+        for i in range(1, 5):
+            if not (stone[0] + 40 * i, stone[1]) in placed:
+                break
+        else:
+            return True
+
+        for i in range(1, 5):
+            if not (stone[0] + 40 * i, stone[1] + 40 * i) in placed:
+                break
+        else:
+            return True
+
+        for i in range(1, 5):
+            if not (stone[0], stone[1] + 40 * i) in placed:
+                break
+        else:
+            return True
+
+        for i in range(1, 5):
+            if not (stone[0] - 40 * i, stone[1] + 40 * i) in placed:
+                break
+        else:
+            return True
+
+        for i in range(1, 5):
+            if not (stone[0] - 40 * i, stone[1]) in placed:
+                break
+        else:
+            return True
     return False
     # 돌 하나에 대해서 주변에 돌 있는지 확인하고 방향(8방향)을 체크,
     # 그리고 두번째 돌 하나에 대해서 가지고 있는 방향을 이용하여 세번째 돌이 나열되어있는지 체크...
@@ -73,7 +121,8 @@ whitePlaced = []
 blackPlaced = []
 circleSize = 17
 Is_turn_black = True
-Isgamefinished = False
+IsBlackWin = False
+IsWhiteWin = False
 
 while True:
     leftMouseClicked = False  #초기 세팅
@@ -115,22 +164,20 @@ while True:
                     guideline(screen, colorGray, boardAll[x][y], circleSize)
                     if leftMouseClicked and Is_turn_black:
                         blackPlaced.append(boardAll[x][y])
-                        IsGameFinished = Check_game_finished(blackPlaced)
+                        IsBlackWin = Check_game_finished(blackPlaced)
                         Is_turn_black = False
                     elif leftMouseClicked and not Is_turn_black:
                         whitePlaced.append(boardAll[x][y])
-                        IsGameFinished = Check_game_finished(whitePlaced)
+                        IsWhiteWin = Check_game_finished(whitePlaced)
                         Is_turn_black = True
                 IsBreak = True
                 break
         if IsBreak:
             break
-
-    if Isgamefinished:
-        if Is_turn_black:
-            printText('white wins!', colorBlack, (100, 100), 40)
-        elif not Is_turn_black:
-            printText('black wins!', colorBlack, (100, 100), 40)
+    if IsBlackWin:
+        printText('black wins!', colorBlack, (150, 200), 40)
+    elif IsWhiteWin:
+        printText('white wins!', colorBlack, (150, 100), 40)
 
     # 좌표에 있는 알맞은 돌 나타냄
     for point in blackPlaced:
