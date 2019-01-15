@@ -11,8 +11,22 @@ def printText(msg, color, pos, fontsize, _font = 'myfont.ttf'):
     textRect.center = pos
     screen.blit(text, textRect)
 
-pygame.init()
-font = 'myfont.ttf'
+def eventHandle(mousePos):
+    escClicked = False
+    leftMouseClicked = False
+    for event in pygame.event.get():
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                escClicked = True
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == MOUSEBUTTONDOWN and event.button == leftMouse:
+            leftMouseClicked = True
+        if event.type == pygame.MOUSEMOTION:
+            mousePos = event.pos
+    return escClicked, leftMouseClicked, mousePos
+
 
 #RGB 포맷으로 색을 정의합니다.
 colorRed = (255, 0, 0)
@@ -32,8 +46,20 @@ rightMouse = 3
 resolution = (1280, 720)
 FPS = 60
 
-
 pygame.init()
+font = 'myfont.ttf'
 pygame.display.set_caption("chess")
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode(resolution)
+
+
+mousePos = (0, 0)
+
+while True:
+    eventHandle(mousePos)
+
+    chessboard = pygame.image.load('chessboard.png')
+    chessboardsize = chessboard.get_size()
+    screen.blit(chessboard, (300, 10))
+    pygame.display.flip()
+    clock.tick(FPS)
