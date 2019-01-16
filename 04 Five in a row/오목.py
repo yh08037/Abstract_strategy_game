@@ -146,7 +146,7 @@ while True:
         pygame.draw.line(screen, colorBlack, boardAll[0][i], boardAll[14][i])
         pygame.draw.line(screen, colorBlack, boardAll[i][0], boardAll[i][14])
     boardVertex = [boardAll[0][0], boardAll[0][14], boardAll[14][14], boardAll[14][0]]
-    pygame.draw.aalines(screen, colorBlack, False, boardVertex)
+    pygame.draw.aalines(screen, colorBlack, True, boardVertex)
     pygame.gfxdraw.aacircle(screen, boardAll[3][3][0], boardAll[3][3][1], 2, colorBlack)
     pygame.gfxdraw.aacircle(screen, boardAll[3][-3][0], boardAll[3][-4][1], 2, colorBlack)
     pygame.gfxdraw.aacircle(screen, boardAll[-4][3][0], boardAll[-4][3][1], 2, colorBlack)
@@ -175,7 +175,7 @@ while True:
         if IsBreak:
             break
     if IsBlackWin:
-        printText('black wins!', colorBlack, (150, 200), 40)
+        printText('black wins!', colorBlack, (150, 100), 40)
     elif IsWhiteWin:
         printText('white wins!', colorBlack, (150, 100), 40)
 
