@@ -186,7 +186,6 @@ while True:
 
         elif gameOver:
             # 승패 여부 출력하기
-            print('dd')
             if X_win:
                 printText("X win!", 'BLACK', (180, 400))
             elif O_win:
