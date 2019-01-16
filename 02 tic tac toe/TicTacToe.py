@@ -181,12 +181,18 @@ while True:
                 if IsBreak:
                     break
 
+            if len(O_placed)+len(X_placed) == 9:
+                gameOver = True
+
         elif gameOver:
             # 승패 여부 출력하기
+            print('dd')
             if X_win:
                 printText("X win!", 'BLACK', (180, 400))
             elif O_win:
                 printText("O win!", 'BLACK', (180, 400))
+            else:
+                printText("Draw!", 'GREEN', (180, 400))
 
 
             # 다시 시작 또는 끝내기 출력
@@ -228,8 +234,6 @@ while True:
             printText("X turn")
         elif not Is_turn_X:
             printText("O turn")
-
-
 
 
 
