@@ -5,6 +5,7 @@ import sys
 #RGB 포맷으로 색 정의
 BLACK = (0,   0,   0  )
 WHITE = (255, 255, 255)
+GRAY = (160, 160, 160)
 
 #게임 엔진 초기화
 pygame.init()
@@ -129,14 +130,13 @@ while True:
 
     # 게임 시작 전 메인 메뉴 화면
     if current == 'menu':
+        pygame.draw.rect(screen, GRAY, [540, 370, 200, 60])
+        pygame.draw.rect(screen, GRAY, [540, 470, 200, 60])
         printText("Tic Tac Toe", 'BLACK', (640, 200))
         printText("start", 'BLACK', (640, 400))
         printText("quit", 'BLACK', (640, 500))
 
-
-
         # 게임 시작 또는 나기기 버튼 클릭 여부 확인
-
         if 540 < mousePos[0] < 740 and 370 < mousePos[1] < 430:
             pygame.draw.rect(screen, BLACK, [540, 370, 200, 60], 3)
             if leftMouseClicked:
@@ -146,6 +146,7 @@ while True:
             if leftMouseClicked:
                 pygame.quit()
                 sys.exit()
+
 
     # 게임 진행 중 화면
     elif current == 'game':
@@ -189,13 +190,15 @@ while True:
 
 
             # 다시 시작 또는 끝내기 출력
+            pygame.draw.rect(screen, GRAY, [1000, 270, 200, 60])
+            pygame.draw.rect(screen, GRAY, [1000, 370, 200, 60])
+            pygame.draw.rect(screen, GRAY, [1000, 470, 200, 60])
             printText("Restart", 'BLACK', (1100, 300))
             printText("Main", 'BLACK', (1100, 400))
             printText("Quit", 'BLACK', (1100, 500))
 
 
             # 다시 시작 또는 나가기 버튼 클릭 확인
-
             if 1000 < mousePos[0] < 1200 and 270 < mousePos[1] < 330:
                 pygame.draw.rect(screen, BLACK, [1000, 270, 200, 60], 3)
                 if leftMouseClicked:
