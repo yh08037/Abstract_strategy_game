@@ -84,6 +84,11 @@ def Check_game_finished(placed):
     # 그리고 두번째 돌 하나에 대해서 가지고 있는 방향을 이용하여 세번째 돌이 나열되어있는지 체크...
     # 5번 반혹 후 하나라도 있으면 True, 없으면 False값을 결정
 
+#흑돌의 33 44 6목 이상을 막습니다.
+def cannotplace(placed):
+    pass
+
+
 pygame.init()
 font = 'myfont.ttf'
 

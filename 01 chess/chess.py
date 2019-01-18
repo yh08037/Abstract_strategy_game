@@ -27,19 +27,12 @@ def eventHandle(mousePos):
             mousePos = event.pos
     return escClicked, leftMouseClicked, mousePos
 
+def drawobject(object, color):
+    pass
+
 
 #RGB 포맷으로 색을 정의합니다.
-colorRed = (255, 0, 0)
-colorBrightRed = (222, 30, 30)
-colorOrange = (255, 83, 51)
-colorDarkGray = (49, 51, 53)
-colorLightGray = (160, 160, 160)
-colorBlue = (0, 0, 255)
-colorBrightBlue = (0, 176, 255)
-colorWhite = (255, 255, 255)
-colorMilkWhite = (223, 220, 205)
-colorGray = (127, 127, 127)
-colorBlack = (0, 0, 0)
+color = {'darkgray':(49, 51, 53), 'black':(0,0,0)}
 
 leftMouse = 1
 rightMouse = 3
@@ -52,14 +45,24 @@ pygame.display.set_caption("chess")
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode(resolution)
 
+boardPositionVertex = ((340, 60), (940,60), (940,660), (340,660))
+whiteObject = {'king':[()], 'queen':[()], 'bishop':[(), ()], 'rook':[(), ()],
+'knight':[(), ()], 'pawn':[(),(),(),(),(),(),(),()]}
+blackObject = {'king':[()], 'queen':[()], 'bishop':[(), ()], 'rook':[(), ()],
+'knight':[(), ()], 'pawn':[(),(),(),(),(),(),(),()]}
 
 mousePos = (0, 0)
-
 while True:
     eventHandle(mousePos)
+    screen.fill(color['darkgray'])
 
     chessboard = pygame.image.load('chessboard.png')
-    chessboardsize = chessboard.get_size()
-    screen.blit(chessboard, (300, 10))
-    pygame.display.flip()
+    screen.blit(chessboard, boardPositionVertex[0])
+    pygame.draw.lines(screen, color['black'], True, boardPositionVertex, 6)
+
+
+    drawobject(whiteObject, 'white')
+    drawobject(blackObject, 'black')
+
+    pygame.display.update()
     clock.tick(FPS)
