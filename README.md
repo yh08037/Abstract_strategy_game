@@ -45,4 +45,5 @@ pip3 install pygame
 
 ### 사용환경
 Python 3.7.0 ~ 3.7.2
-Pygame 1.9.4
+
+Pygame 1.9.4 ~ 1.9.5
