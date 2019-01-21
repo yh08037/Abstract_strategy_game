@@ -220,7 +220,6 @@ while True:
                     sys.exit()
 
 
-
         # O, X 그리기
         for point in X_placed:
             draw_X(point)
