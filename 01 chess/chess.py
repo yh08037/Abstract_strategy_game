@@ -79,7 +79,7 @@ while True:
     pygame.draw.lines(screen, color['black'], True, boardPositionVertex, 6)
 
 
-    drawobject(whiteObject, 'white')
+    # drawobject(whiteObject, 'white')
     drawobject(blackObject, 'black')
 
     pygame.display.update()
