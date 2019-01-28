@@ -578,7 +578,7 @@ while True:
             continue
 
         if leftMouseClicked and 610 < mousePos[0] < 670 and 460 < mousePos[1] < 500:
-            openFile = input("Input to open file. ") + '.txt'
+            openFile = 'record\\' + input("Input to open file. ") + '.txt'
             if os.path.exists(openFile):
                 openData = open(openFile, 'r')
             else:
@@ -867,7 +867,7 @@ while True:
         pygame.display.flip()
 
         if 1080 < mousePos[0] < 1120 and 580 < mousePos[1] < 620 and leftMouseClicked:
-            saveFile = input("Name to save : ") + '.txt'
+            saveFile = 'record\\'+ input("Name to save : ") + '.txt'
             saveData = open(saveFile, 'w')
             for i in range(len(mirror)):
                 saveData.write(str(mirror[i]) + '\n')
