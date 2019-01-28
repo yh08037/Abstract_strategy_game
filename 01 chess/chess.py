@@ -34,17 +34,16 @@ def eventHandle(mousePos):
 
 # 체스 말을 그립니다.
 def drawobject(object, color):
-    pass
 
-# 각 기물의 모양을 불러올 좌표를 정합니다.
-object = {
-'blackKing' : [((0, 0), (70, 70))],
-'blackQueen' : [((128, 0), (200, 70))],
-'blackBishop' : [((264, 0), (330, 70))],
-'blackKnight' : [((393, 0), (467, 70))],
-'blackRook' : [((526, 0), (600, 70))],
-'blackPawn' : [((669, 0), (719, 70))],
-'whiteKing' : [((0, 112), (70, 184))]   ,
+# chess-symbels으로부터 각 기물의 이미지를 불러오기 위해 각각에 해당하는 좌표를 찍습니다.
+chess_symbols_position = {
+'blackKing' : ((0, 0), (70, 70)), [],
+'blackQueen' : ((128, 0), (200, 70)),
+'blackBishop' : ((264, 0), (330, 70)),
+'blackKnight' : ((393, 0), (467, 70)),
+'blackRook' : ((526, 0), (600, 70)),
+'blackPawn' : ((669, 0), (719, 70)),
+'whiteKing' : ((0, 112), (70, 184))],
 'WhiteQueen' : ((128, 112), (200, 184)),
 'whiteBishop' : ((264, 112), (330, 200)),
 'whiteKnight' : ((393, 112), (467, 200)),
@@ -68,7 +67,7 @@ pygame.display.set_caption("chess")
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode(resolution)
 
-boardPositionVertex = ((340, 60), (940,60), (940,660), (340,660))
+boardPositionVertex = ((340, 60), (940,60), (940,660), (340,660))  # 보드판의 꼭짓점
 
 while True:
     eventHandle(mousePos)
