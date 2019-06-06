@@ -1,0 +1,20 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskName": "task-오목",
+      "appliesTo": "04 Five in a row/오목.py",
+      "type": "launch"
+    },
+    {
+      "taskName": "task-README",
+      "appliesTo": "04 Five in a row/README.md",
+      "type": "launch"
+    },
+    {
+      "taskName": "task-myfont",
+      "appliesTo": "04 Five in a row/myfont.ttf",
+      "type": "launch"
+    }
+  ]
+}

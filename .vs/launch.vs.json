@@ -1,0 +1,16 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "managed",
+      "name": "오목.py",
+      "project": "04 Five in a row\\오목.py"
+    },
+    {
+      "type": "mixed",
+      "name": "오목.py(1)",
+      "project": "04 Five in a row\\오목.py"
+    }
+  ]
+}
