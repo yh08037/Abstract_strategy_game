@@ -1,9 +1,5 @@
 # 추상전략 게임들을 구현합니다!
 
-![tic tac toe](images/tic_tac_toe_1.PNG)
-
-![razor and mirror](iamges/razor_and_mirror.PNG)
-
 python의 pygame을 이용하여 추상전략 게임을 구현해봅니다.
 
 추상전략 게임이란 보드 게임에서 숨겨지거나 운적인 요소가 없고 나와 상대방의 패가 모두 공개된 게임을 말합니다. 수가 유한하기 때문에 서로 최선의 수를 두었을 때 항상 한 쪽이 무조건 이기거나 무조건 비길 수 밖에 없습니다. 그래도 무궁무진한 수를 가지고 있기 때문에 수를 다 외우지 않은 이상 충분히 즐길 수 있는 게임입니다.
@@ -15,6 +11,11 @@ pip3 install pygame
 를 입력하면 사용할 수 있을 겁니다. 자세한 것은 파이게임 설치하는 법에 대해서 알아보세요.
 
 추상전략게임에 사용된 폰트('myfont.ttf')는 ba안경고딕입니다.
+
+
+![tic tac toe](images/tic_tac_toe_1.PNG)
+
+![razor and mirror](images/razor_and_mirror_1.PNG)
 
 ---
 ## 만들 순서
