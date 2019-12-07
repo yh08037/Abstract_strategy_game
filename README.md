@@ -17,7 +17,8 @@ pip3 install pygame
 
 ![razor and mirror](images/razor_and_mirror_1.PNG)
 
----
+<br>
+
 ## 만들 순서
 
 1. 체스
