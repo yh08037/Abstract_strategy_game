@@ -12,9 +12,10 @@ pip3 install pygame
 
 추상전략게임에 사용된 폰트('myfont.ttf')는 ba안경고딕입니다.
 
-
+#### Tic Tac Toe
 ![tic tac toe](images/tic_tac_toe_1.PNG)
 
+#### 거울과 레이저
 ![razor and mirror](images/razor_and_mirror_1.PNG)
 
 <br>
